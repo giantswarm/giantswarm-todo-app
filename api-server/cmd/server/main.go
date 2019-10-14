@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"runtime"
 
 	"github.com/go-chi/chi"
@@ -22,9 +23,13 @@ func printVersion(l *logrus.Logger) {
 }
 
 func main() {
+	todoURL := os.Getenv("TODO_URL")
+	if todoURL == "" {
+		panic("Required environment variable 'TODO_URL' not set")
+	}
 	server := server.NewChiServer(func(r *chi.Mux) {
 		r.Route("/v1", func(r chi.Router) {
-			r.Mount("/todo", todo.NewRouter("unknown").GetRouter())
+			r.Mount("/todo", todo.NewRouter(todoURL).GetRouter())
 		})
 	}, &server.ChiServerOptions{
 		HTTPPort:              8080,

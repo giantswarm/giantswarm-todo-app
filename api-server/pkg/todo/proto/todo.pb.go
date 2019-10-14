@@ -1,0 +1,1 @@
+../../../../todo-manager/pkg/proto/todo.pb.go

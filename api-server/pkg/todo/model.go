@@ -1,6 +1,9 @@
 package todo
 
-import "net/http"
+import (
+	"net/http"
+	todomgrpb "github.com/giantswarm/blog-i-want-it-all/api-server/pkg/todo/proto"
+)
 
 // Todo data model.
 type Todo struct {
@@ -13,7 +16,28 @@ type Todo struct {
 func (t *Todo) Bind(r *http.Request) error {
 	return nil
 }
+
 // Render allows to modify the way Todo object is rendered to text; not used here
 func (t *Todo) Render(w http.ResponseWriter, r *http.Request) error {
 	return nil
+}
+
+// ToGRPCTodo return gRPC DTO for the upstream todo-manager service
+func (t *Todo) ToGRPCTodo(owner string) *todomgrpb.Todo {
+	return &todomgrpb.Todo{
+		Id: t.ID,
+		Text: t.Text,
+		Done: t.Done,
+		Owner: owner,
+	}
+}
+
+// FromGRPCTodo returns new Todo object and owner info based on gRPC DTO from the upstream
+// todo-manager service
+func FromGRPCTodo(grpcTodo *todomgrpb.Todo) (*Todo, string) {
+	return &Todo{
+		ID: grpcTodo.GetId(),
+		Text: grpcTodo.GetText(),
+		Done: grpcTodo.GetDone(),
+	}, grpcTodo.GetOwner() 
 }

@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "api-server"
+		},
+		{
+			"path": "todo-manager"
+		}
+	],
+	"settings": {
+		"cSpell.words": [
+			"Todos",
+			"todomgrpb",
+			"todos"
+		]
+	}
+}
