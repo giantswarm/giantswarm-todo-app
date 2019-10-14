@@ -1,0 +1,31 @@
+syntax = "proto3";
+package todo_mgr;
+option go_package = "todomgrpb";
+
+service TodoManager {
+    rpc CreateTodo(Todo) returns (Todo);
+    rpc ListTodos(ListTodosReq) returns (stream Todo);
+    rpc GetTodo(TodoIdReq) returns (Todo);
+    rpc UpdateTodo(Todo) returns (Todo);
+    rpc DeleteTodo(TodoIdReq) returns (DeleteTodoRes);
+}
+
+message Todo {
+    string id = 1;
+    string text = 2;
+    bool done = 3;
+    string owner = 4;
+}
+
+message TodoIdReq {
+    string id = 1;
+    string owner = 2;
+}
+
+message ListTodosReq {
+    string owner = 1;
+}
+
+message DeleteTodoRes {
+    bool success = 1;
+}
