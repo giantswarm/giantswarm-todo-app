@@ -8,7 +8,7 @@ import (
 )
 
 var todo = &todomgrpb.Todo{
-	ID:    100,
+	Id:    "100",
 	Text:  "bogus",
 	Done:  false,
 	Owner: "test_user",
@@ -19,7 +19,7 @@ type TodoManagerServer struct{}
 
 // CreateTodo stores new todo in database
 func (*TodoManagerServer) CreateTodo(ctx context.Context, todo *todomgrpb.Todo) (*todomgrpb.Todo, error) {
-	todo.ID = 101
+	todo.Id = "101"
 	return todo, nil
 }
 

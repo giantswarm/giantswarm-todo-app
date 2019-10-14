@@ -7,8 +7,8 @@ import (
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 
-	todomgr "github.com/giantswarm/blog-i-want-it-all/todo-manager/pkg/server"
 	todomgrpb "github.com/giantswarm/blog-i-want-it-all/todo-manager/pkg/proto"
+	todomgr "github.com/giantswarm/blog-i-want-it-all/todo-manager/pkg/server"
 )
 
 var (
