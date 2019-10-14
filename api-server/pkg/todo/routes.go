@@ -84,14 +84,31 @@ func (t *Router) ListTodos(w http.ResponseWriter, r *http.Request) {
 
 // CreateTodo creates a new todo for a given user
 func (t *Router) CreateTodo(w http.ResponseWriter, r *http.Request) {
+	// TODO: logging
+	// bin JSON from request to go object
 	data := &Todo{}
 	if err := render.Bind(r, data); err != nil {
 		render.Render(w, r, &middleware.ErrResponse{HTTPStatusCode: 400, StatusText: "Invalid request."})
 		return
 	}
-	fmt.Print(data.ID)
-	fmt.Print(data.Text)
-	fmt.Print(data.Done)
+	// validate
+	// todo text can't be empty
+	if data.Text == "" {
+		render.Render(w, r, &middleware.ErrResponse{HTTPStatusCode: 400, StatusText: "Invalid request."})
+		return
+	}
+	// run request
+	newGrpcTodo, err := t.grpcClient.CreateTodo(r.Context(), data.ToGRPCTodo(Username))
+	if err != nil {
+		render.Render(w, r, &middleware.ErrResponse{HTTPStatusCode: 400, StatusText: "Invalid request."})
+		return
+	}
+	// convert to JSON object and send response
+	todo, _ := FromGRPCTodo(newGrpcTodo)
+	if err := render.Render(w, r, todo); err != nil {
+		render.Render(w, r, middleware.ErrRender(err))
+		return
+	}
 }
 
 // GetTodo gets a todo with specified user and todo ID
