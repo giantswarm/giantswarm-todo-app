@@ -1,8 +1,8 @@
 package todo
 
 import (
-	"net/http"
 	todomgrpb "github.com/giantswarm/blog-i-want-it-all/api-server/pkg/todo/proto"
+	"net/http"
 )
 
 // Todo data model.
@@ -25,9 +25,9 @@ func (t *Todo) Render(w http.ResponseWriter, r *http.Request) error {
 // ToGRPCTodo return gRPC DTO for the upstream todo-manager service
 func (t *Todo) ToGRPCTodo(owner string) *todomgrpb.Todo {
 	return &todomgrpb.Todo{
-		Id: t.ID,
-		Text: t.Text,
-		Done: t.Done,
+		Id:    t.ID,
+		Text:  t.Text,
+		Done:  t.Done,
 		Owner: owner,
 	}
 }
@@ -36,15 +36,15 @@ func (t *Todo) ToGRPCTodo(owner string) *todomgrpb.Todo {
 // upstream todo-manager service
 func FromGRPCTodo(grpcTodo *todomgrpb.Todo) (*Todo, string) {
 	return &Todo{
-		ID: grpcTodo.GetId(),
+		ID:   grpcTodo.GetId(),
 		Text: grpcTodo.GetText(),
 		Done: grpcTodo.GetDone(),
-	}, grpcTodo.GetOwner() 
+	}, grpcTodo.GetOwner()
 }
 
 // DeleteRes data model.
 type DeleteRes struct {
-	Success bool   `json:"success"`
+	Success bool `json:"success"`
 }
 
 // Bind allows to set additional properties on Todo object; not used here
