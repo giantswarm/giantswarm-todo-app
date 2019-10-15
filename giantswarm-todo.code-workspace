@@ -32,7 +32,11 @@
 				"request": "launch",
 				"mode": "debug",
 				"program": "${workspaceFolder:todo-manager}/cmd/server/main.go",
-				"env": { }
+				"env": { 
+					"MYSQL_HOST": "localhost",
+					"MYSQL_USER": "root",
+					"MYSQL_PASS": "a3KhLzJ6p8"
+				}
 			}
 		],
 		"compounds": [

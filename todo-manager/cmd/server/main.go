@@ -23,8 +23,9 @@ func printVersion(l *logrus.Logger) {
 }
 
 func main() {
+	config := todomgr.NewConfig()
+	todoMgr := todomgr.NewTodoManagerServer(config)
 	server := grpcserver.NewGrpcServer(func(server *grpc.Server) {
-		todoMgr := &todomgr.TodoManagerServer{}
 		todomgrpb.RegisterTodoManagerServer(server, todoMgr)
 	}, &grpcserver.GrpcServerOptions{
 		LoggerFields: logrus.Fields{
@@ -33,4 +34,5 @@ func main() {
 	})
 	printVersion(server.GetLogger())
 	server.Run()
+	todoMgr.Stop()
 }

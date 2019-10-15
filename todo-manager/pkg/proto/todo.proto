@@ -11,14 +11,14 @@ service TodoManager {
 }
 
 message Todo {
-    string id = 1;
+    uint64 id = 1;
     string text = 2;
     bool done = 3;
     string owner = 4;
 }
 
 message TodoIdReq {
-    string id = 1;
+    uint64 id = 1;
     string owner = 2;
 }
 

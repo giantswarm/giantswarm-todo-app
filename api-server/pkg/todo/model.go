@@ -1,8 +1,11 @@
 package todo
 
 import (
-	todomgrpb "github.com/giantswarm/blog-i-want-it-all/api-server/pkg/todo/proto"
+	"fmt"
 	"net/http"
+	"strconv"
+
+	todomgrpb "github.com/giantswarm/blog-i-want-it-all/api-server/pkg/todo/proto"
 )
 
 // Todo data model.
@@ -24,8 +27,9 @@ func (t *Todo) Render(w http.ResponseWriter, r *http.Request) error {
 
 // ToGRPCTodo return gRPC DTO for the upstream todo-manager service
 func (t *Todo) ToGRPCTodo(owner string) *todomgrpb.Todo {
+	id, _ := strconv.ParseUint(t.ID, 10, 64)
 	return &todomgrpb.Todo{
-		Id:    t.ID,
+		Id:    id,
 		Text:  t.Text,
 		Done:  t.Done,
 		Owner: owner,
@@ -36,7 +40,7 @@ func (t *Todo) ToGRPCTodo(owner string) *todomgrpb.Todo {
 // upstream todo-manager service
 func FromGRPCTodo(grpcTodo *todomgrpb.Todo) (*Todo, string) {
 	return &Todo{
-		ID:   grpcTodo.GetId(),
+		ID:   fmt.Sprintf("%d", grpcTodo.GetId()),
 		Text: grpcTodo.GetText(),
 		Done: grpcTodo.GetDone(),
 	}, grpcTodo.GetOwner()

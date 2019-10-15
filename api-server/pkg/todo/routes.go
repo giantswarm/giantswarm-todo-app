@@ -95,6 +95,7 @@ func (t *Router) CreateTodo(w http.ResponseWriter, r *http.Request) {
 		render.Render(w, r, middleware.ErrInvalidRequest(errors.New("Text can't be empty")))
 		return
 	}
+	data.ID = "0"
 	// run request
 	newGrpcTodo, err := t.grpcClient.CreateTodo(r.Context(), data.ToGRPCTodo(Username))
 	if err != nil {
@@ -112,13 +113,13 @@ func (t *Router) CreateTodo(w http.ResponseWriter, r *http.Request) {
 // GetTodo gets a todo with specified user and todo ID
 func (t *Router) GetTodo(w http.ResponseWriter, r *http.Request) {
 	todoID := chi.URLParam(r, "todoID")
-	_, err := strconv.Atoi(todoID)
+	id, err := strconv.ParseUint(todoID, 10, 64)
 	if err != nil {
 		render.Render(w, r, middleware.ErrInvalidRequest(err))
 		return
 	}
 	grpcTodo, err := t.grpcClient.GetTodo(r.Context(), &todomgrpb.TodoIdReq{
-		Id:    todoID,
+		Id:    uint64(id),
 		Owner: Username,
 	})
 	if err != nil {
@@ -135,13 +136,13 @@ func (t *Router) GetTodo(w http.ResponseWriter, r *http.Request) {
 // DeleteTodo deletes a todo with specified user and todo ID
 func (t *Router) DeleteTodo(w http.ResponseWriter, r *http.Request) {
 	todoID := chi.URLParam(r, "todoID")
-	_, err := strconv.Atoi(todoID)
+	id, err := strconv.ParseUint(todoID, 10, 64)
 	if err != nil {
 		render.Render(w, r, middleware.ErrInvalidRequest(err))
 		return
 	}
 	deleteRes, err := t.grpcClient.DeleteTodo(r.Context(), &todomgrpb.TodoIdReq{
-		Id:    todoID,
+		Id:    uint64(id),
 		Owner: Username,
 	})
 	if err != nil {
@@ -157,7 +158,7 @@ func (t *Router) DeleteTodo(w http.ResponseWriter, r *http.Request) {
 // UpdateTodo updates a todo with specified user and todo ID
 func (t *Router) UpdateTodo(w http.ResponseWriter, r *http.Request) {
 	todoID := chi.URLParam(r, "todoID")
-	_, err := strconv.Atoi(todoID)
+	_, err := strconv.ParseUint(todoID, 10, 64)
 	if err != nil {
 		render.Render(w, r, middleware.ErrInvalidRequest(err))
 		return
@@ -167,6 +168,7 @@ func (t *Router) UpdateTodo(w http.ResponseWriter, r *http.Request) {
 		render.Render(w, r, middleware.ErrInvalidRequest(err))
 		return
 	}
+	data.ID = todoID
 	if data.ID != "" && data.ID != todoID {
 		render.Render(w, r, middleware.ErrInvalidRequest(errors.New("ID from JSON is not empty and doesn't match URL ID")))
 		return
