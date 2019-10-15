@@ -7,7 +7,7 @@ metadata:
   labels:
     app: todomanager
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: todomanager
@@ -27,6 +27,16 @@ spec:
             - name: grpc
               containerPort: 8090
               protocol: TCP
+          env:
+            - name: "MYSQL_HOST"
+              value: "todo-mysql.todo.svc.cluster.local"
+            - name: "MYSQL_USER"
+              value: "root"
+            - name: "MYSQL_PASS"
+              valueFrom:
+                secretKeyRef:
+                  name: todo-mysql
+                  key: mysql-root-password
           resources:
             {}
             
