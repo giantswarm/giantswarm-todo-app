@@ -5,11 +5,11 @@ IMG ?= ${BIN}:latest
 all: test build
 
 # Run tests
-test: generate fmt vet
+test: fmt vet
 	go test ./... -coverprofile cover.out
 
 # Build binary
-build: generate fmt vet compile
+build: fmt vet compile
 
 compile:
 	go build \
@@ -20,7 +20,7 @@ compile:
 		-o bin/${BIN} ./cmd/server/main.go
 
 # Run directly
-run: generate fmt vet
+run: fmt vet
 	go run ./cmd/server/main.go
 
 # Run go fmt against code

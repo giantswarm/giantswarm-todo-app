@@ -37,7 +37,7 @@ generate:
 
 # Build the docker image from lacally built binary
 docker-build: build
-	docker build . -t ${IMG}
+	docker build -t ${IMG} .
 
 # Push the docker image
 docker-push:
