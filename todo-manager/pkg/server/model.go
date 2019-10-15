@@ -16,10 +16,10 @@ type TodoEntry struct {
 
 // ToGrpc returns GRPC object from DB object
 func (e *TodoEntry) ToGrpc() *todomgrpb.Todo {
-	return &todomgrpb.Todo {
-		Id: uint64(e.ID),
-		Text: e.Text,
-		Done: e.Done,
+	return &todomgrpb.Todo{
+		Id:    uint64(e.ID),
+		Text:  e.Text,
+		Done:  e.Done,
 		Owner: e.Owner,
 	}
 }
