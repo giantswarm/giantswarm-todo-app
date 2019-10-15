@@ -53,6 +53,9 @@ func (t *TodoManagerServer) Stop() {
 func (t *TodoManagerServer) CreateTodo(ctx context.Context, todo *todomgrpb.Todo) (*todomgrpb.Todo, error) {
 	dbTodo := FromGrpc(todo)
 	t.db.Create(dbTodo)
+	if dbTodo.ID == 0 {
+		return nil, errors.New("Error inserting to database")
+	}
 	return dbTodo.ToGrpc(), nil
 }
 
@@ -71,7 +74,7 @@ func (t *TodoManagerServer) ListTodos(req *todomgrpb.ListTodosReq, srv todomgrpb
 func (t *TodoManagerServer) GetTodo(ctx context.Context, grpcTodo *todomgrpb.TodoIdReq) (*todomgrpb.Todo, error) {
 	found := TodoEntry{}
 	t.db.First(&found, grpcTodo.GetId())
-	if found.Owner != grpcTodo.GetOwner() {
+	if found.ID == 0 || found.Owner != grpcTodo.GetOwner() {
 		return nil, errors.New("Todo not found")
 	}
 	return found.ToGrpc(), nil
@@ -81,13 +84,16 @@ func (t *TodoManagerServer) GetTodo(ctx context.Context, grpcTodo *todomgrpb.Tod
 func (t *TodoManagerServer) UpdateTodo(ctx context.Context, grpcTodo *todomgrpb.Todo) (*todomgrpb.Todo, error) {
 	found := TodoEntry{}
 	t.db.First(&found, grpcTodo.GetId())
-	if found.Owner != grpcTodo.GetOwner() {
+	if found.ID == 0 || found.Owner != grpcTodo.GetOwner() {
 		return nil, errors.New("Todo not found")
 	}
 
 	found.Text = grpcTodo.Text
 	found.Done = grpcTodo.Done
 	t.db.Save(&found)
+	if found.ID == 0 {
+		return nil, errors.New("Error updating record in DB")
+	}
 
 	return found.ToGrpc(), nil
 }
@@ -96,7 +102,7 @@ func (t *TodoManagerServer) UpdateTodo(ctx context.Context, grpcTodo *todomgrpb.
 func (t *TodoManagerServer) DeleteTodo(ctx context.Context, grpcTodo *todomgrpb.TodoIdReq) (*todomgrpb.DeleteTodoRes, error) {
 	found := TodoEntry{}
 	t.db.First(&found, grpcTodo.GetId())
-	if found.Owner != grpcTodo.GetOwner() {
+	if found.ID == 0 || found.Owner != grpcTodo.GetOwner() {
 		return nil, errors.New("Todo not found")
 	}
 
