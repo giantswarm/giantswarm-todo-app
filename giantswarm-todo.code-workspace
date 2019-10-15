@@ -13,5 +13,33 @@
 			"todomgrpb",
 			"todos"
 		]
+	},
+	"launch": {
+		"configurations": [
+			{
+				"name": "Debug - Apiserver",
+				"type": "go",
+				"request": "launch",
+				"mode": "debug",
+				"program": "${workspaceFolder:api-server}/cmd/server/main.go",
+				"env": {
+					"TODO_URL": "localhost:8090"
+				}
+			},
+			{
+				"name": "Debug - Todomanager",
+				"type": "go",
+				"request": "launch",
+				"mode": "debug",
+				"program": "${workspaceFolder:todo-manager}/cmd/server/main.go",
+				"env": { }
+			}
+		],
+		"compounds": [
+			{
+				"name": "Debug - All",
+				"configurations": ["Debug - Apiserver", "Debug - Todomanager"]
+			}
+		]
 	}
 }
