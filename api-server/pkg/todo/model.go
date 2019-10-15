@@ -32,12 +32,35 @@ func (t *Todo) ToGRPCTodo(owner string) *todomgrpb.Todo {
 	}
 }
 
-// FromGRPCTodo returns new Todo object and owner info based on gRPC DTO from the upstream
-// todo-manager service
+// FromGRPCTodo returns new Todo object and owner info based on gRPC DTO from the
+// upstream todo-manager service
 func FromGRPCTodo(grpcTodo *todomgrpb.Todo) (*Todo, string) {
 	return &Todo{
 		ID: grpcTodo.GetId(),
 		Text: grpcTodo.GetText(),
 		Done: grpcTodo.GetDone(),
 	}, grpcTodo.GetOwner() 
+}
+
+// DeleteRes data model.
+type DeleteRes struct {
+	Success bool   `json:"success"`
+}
+
+// Bind allows to set additional properties on Todo object; not used here
+func (t *DeleteRes) Bind(r *http.Request) error {
+	return nil
+}
+
+// Render allows to modify the way Todo object is rendered to text; not used here
+func (t *DeleteRes) Render(w http.ResponseWriter, r *http.Request) error {
+	return nil
+}
+
+// FromGRPCDeleteRes returns new DeleteRes object based on gRPC DTO from the
+// upstream todo-manager service
+func FromGRPCDeleteRes(grpcRes *todomgrpb.DeleteTodoRes) *DeleteRes {
+	return &DeleteRes{
+		Success: grpcRes.GetSuccess(),
+	}
 }

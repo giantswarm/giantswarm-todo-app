@@ -1,10 +1,11 @@
 package todo
 
 import (
-	"fmt"
+	"errors"
 	"io"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
@@ -60,7 +61,6 @@ func (t *Router) ListTodos(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		render.Render(w, r, middleware.ErrRender(err))
 		return
-
 	}
 	for {
 		res, err := stream.Recv()
@@ -84,23 +84,21 @@ func (t *Router) ListTodos(w http.ResponseWriter, r *http.Request) {
 
 // CreateTodo creates a new todo for a given user
 func (t *Router) CreateTodo(w http.ResponseWriter, r *http.Request) {
-	// TODO: logging
-	// bin JSON from request to go object
+	// bind JSON from request to go object
 	data := &Todo{}
 	if err := render.Bind(r, data); err != nil {
-		render.Render(w, r, &middleware.ErrResponse{HTTPStatusCode: 400, StatusText: "Invalid request."})
+		render.Render(w, r, middleware.ErrInvalidRequest(err))
 		return
 	}
-	// validate
-	// todo text can't be empty
+	// validate - todo text can't be empty
 	if data.Text == "" {
-		render.Render(w, r, &middleware.ErrResponse{HTTPStatusCode: 400, StatusText: "Invalid request."})
+		render.Render(w, r, middleware.ErrInvalidRequest(errors.New("Text can't be empty")))
 		return
 	}
 	// run request
 	newGrpcTodo, err := t.grpcClient.CreateTodo(r.Context(), data.ToGRPCTodo(Username))
 	if err != nil {
-		render.Render(w, r, &middleware.ErrResponse{HTTPStatusCode: 400, StatusText: "Invalid request."})
+		render.Render(w, r, middleware.ErrRender(err))
 		return
 	}
 	// convert to JSON object and send response
@@ -114,22 +112,73 @@ func (t *Router) CreateTodo(w http.ResponseWriter, r *http.Request) {
 // GetTodo gets a todo with specified user and todo ID
 func (t *Router) GetTodo(w http.ResponseWriter, r *http.Request) {
 	todoID := chi.URLParam(r, "todoID")
-	fmt.Print(todoID)
+	_, err := strconv.Atoi(todoID)
+	if err != nil {
+		render.Render(w, r, middleware.ErrInvalidRequest(err))
+		return
+	}
+	grpcTodo, err := t.grpcClient.GetTodo(r.Context(), &todomgrpb.TodoIdReq{
+		Id:    todoID,
+		Owner: Username,
+	})
+	if err != nil {
+		render.Render(w, r, middleware.ErrRender(err))
+		return
+	}
+	todo, _ := FromGRPCTodo(grpcTodo)
+	if err := render.Render(w, r, todo); err != nil {
+		render.Render(w, r, middleware.ErrRender(err))
+		return
+	}
 }
 
 // DeleteTodo deletes a todo with specified user and todo ID
 func (t *Router) DeleteTodo(w http.ResponseWriter, r *http.Request) {
 	todoID := chi.URLParam(r, "todoID")
-	fmt.Print(todoID)
+	_, err := strconv.Atoi(todoID)
+	if err != nil {
+		render.Render(w, r, middleware.ErrInvalidRequest(err))
+		return
+	}
+	deleteRes, err := t.grpcClient.DeleteTodo(r.Context(), &todomgrpb.TodoIdReq{
+		Id:    todoID,
+		Owner: Username,
+	})
+	if err != nil {
+		render.Render(w, r, middleware.ErrRender(err))
+		return
+	}
+	if err := render.Render(w, r, FromGRPCDeleteRes(deleteRes)); err != nil {
+		render.Render(w, r, middleware.ErrRender(err))
+		return
+	}
 }
 
 // UpdateTodo updates a todo with specified user and todo ID
 func (t *Router) UpdateTodo(w http.ResponseWriter, r *http.Request) {
 	todoID := chi.URLParam(r, "todoID")
-	fmt.Print(todoID)
+	_, err := strconv.Atoi(todoID)
+	if err != nil {
+		render.Render(w, r, middleware.ErrInvalidRequest(err))
+		return
+	}
 	data := &Todo{}
 	if err := render.Bind(r, data); err != nil {
 		render.Render(w, r, middleware.ErrInvalidRequest(err))
+		return
+	}
+	if data.ID != "" && data.ID != todoID {
+		render.Render(w, r, middleware.ErrInvalidRequest(errors.New("ID from JSON is not empty and doesn't match URL ID")))
+		return
+	}
+	grpcTodo, err := t.grpcClient.UpdateTodo(r.Context(), data.ToGRPCTodo(Username))
+	if err != nil {
+		render.Render(w, r, middleware.ErrRender(err))
+		return
+	}
+	todo, _ := FromGRPCTodo(grpcTodo)
+	if err := render.Render(w, r, todo); err != nil {
+		render.Render(w, r, middleware.ErrRender(err))
 		return
 	}
 }
