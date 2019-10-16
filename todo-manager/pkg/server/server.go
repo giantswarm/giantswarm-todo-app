@@ -62,7 +62,7 @@ func (t *TodoManagerServer) CreateTodo(ctx context.Context, todo *todomgrpb.Todo
 // ListTodos lists all todos owned by the user sent in request
 func (t *TodoManagerServer) ListTodos(req *todomgrpb.ListTodosReq, srv todomgrpb.TodoManager_ListTodosServer) error {
 	var todos []TodoEntry
-	t.db.Find(&todos)
+	t.db.Where("owner = ?", req.Owner).Find(&todos)
 	for _, t := range todos {
 		todo := t.ToGrpc()
 		srv.Send(todo)

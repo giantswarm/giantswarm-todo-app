@@ -27,9 +27,9 @@ func (e *TodoEntry) ToGrpc() *todomgrpb.Todo {
 // FromGrpc returns DB object from GRPC object
 func FromGrpc(grpcTodo *todomgrpb.Todo) *TodoEntry {
 	return &TodoEntry{
-		Model: gorm.Model{ID: uint(grpcTodo.GetId())},
-		Text:  grpcTodo.GetText(),
-		Done:  grpcTodo.GetDone(),
-		Owner: grpcTodo.GetOwner(),
+		Model: gorm.Model{ID: uint(grpcTodo.Id)},
+		Text:  grpcTodo.Text,
+		Done:  grpcTodo.Done,
+		Owner: grpcTodo.Owner,
 	}
 }
