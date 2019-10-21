@@ -1,0 +1,42 @@
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: todomanager
+  namespace: todo
+  labels:
+    app: todomanager
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: todomanager
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: todomanager
+    spec:
+      serviceAccountName: todomanager
+      containers:
+        - name: todomanager
+          image: "todomanager:latest"
+          imagePullPolicy: "Never"
+          ports:
+            - name: grpc
+              containerPort: 8090
+              protocol: TCP
+          env:
+            - name: "MYSQL_HOST"
+              value: "todo-mysql.todo.svc.cluster.local"
+            - name: "MYSQL_USER"
+              value: "root"
+            - name: "MYSQL_PASS"
+              valueFrom:
+                secretKeyRef:
+                  name: todo-mysql
+                  key: mysql-root-password
+          resources:
+            {}
+            

@@ -1,0 +1,107 @@
+- job_name: kubernetes-todo-manager
+  pipeline_stages:
+    - docker: {}
+    - json:
+        expressions:
+          grpc_code: '"grpc.code"'
+          grpc_method: '"grpc.method"'
+          grpc_service: '"grpc.service"'
+          grpc_start_time: '"grpc.start_time"'
+          grpc_exec_time_ms: '"grpc.time_ms"'
+          level: level
+          msg: msg
+          remote_addr: '"peer.address"'
+          span_kind: '"span.kind"'
+          system: system
+    - labels:
+          grpc_code:
+          grpc_method:
+          grpc_service:
+          grpc_exec_time_ms:
+          level:
+          peer_address:
+          span_kind:
+          system:
+    - output:
+        source: msg
+    - timestamp:
+        source: grpc_start_time
+        format: RFC3339
+    
+  kubernetes_sd_configs:
+  - role: pod
+  relabel_configs:
+  - action: replace
+    separator: /
+    source_labels:
+    - __meta_kubernetes_namespace
+    - __meta_kubernetes_pod_label_app
+    target_label: todo_app
+  - action: keep
+    regex: ^todo/todomanager$
+    source_labels:
+    - todo_app
+  - replacement: /var/log/pods/*$1/*.log
+    separator: /
+    source_labels:
+    - __meta_kubernetes_pod_uid
+    - __meta_kubernetes_pod_container_name
+    target_label: __path__
+
+- job_name: kubernetes-apiserver
+  pipeline_stages:
+    - docker: {}
+    - json:
+        expressions:
+          http_method:
+          http_proto:
+          http_scheme:
+          http_uri: uri
+          http_resp_bytes: resp_bytes_length
+          http_exectime_ms: resp_elapsed_ms
+          http_status: resp_status
+          http_timestamp: ts
+          http_user_agent: user_agent
+          todo_apiserver_version: ver
+          req_id:
+          remote_addr:
+          level:
+          msg:
+    - labels:
+        http_method:
+        http_proto:
+        http_scheme:
+        http_uri:
+        http_resp_bytes:
+        http_exectime_ms:
+        http_status:
+        http_user_agent:
+        todo_apiserver_version:
+        req_id:
+        remote_addr:
+        level:
+    - output:
+        source: msg
+    - timestamp:
+        source: http_timestamp
+        format: RFC1123
+    
+  kubernetes_sd_configs:
+  - role: pod
+  relabel_configs:
+  - action: replace
+    separator: /
+    source_labels:
+    - __meta_kubernetes_namespace
+    - __meta_kubernetes_pod_label_app
+    target_label: todo_app
+  - action: keep
+    regex: ^todo/apiserver$
+    source_labels:
+    - todo_app
+  - replacement: /var/log/pods/*$1/*.log
+    separator: /
+    source_labels:
+    - __meta_kubernetes_pod_uid
+    - __meta_kubernetes_pod_container_name
+    target_label: __path__

@@ -1,0 +1,49 @@
+{
+	"folders": [
+		{
+			"path": "api-server"
+		},
+		{
+			"path": "todo-manager"
+		}
+	],
+	"settings": {
+		"cSpell.words": [
+			"Todos",
+			"todomgrpb",
+			"todos"
+		]
+	},
+	"launch": {
+		"configurations": [
+			{
+				"name": "Debug - Apiserver",
+				"type": "go",
+				"request": "launch",
+				"mode": "debug",
+				"program": "${workspaceFolder:api-server}/cmd/server/main.go",
+				"env": {
+					"TODO_URL": "localhost:8090"
+				}
+			},
+			{
+				"name": "Debug - Todomanager",
+				"type": "go",
+				"request": "launch",
+				"mode": "debug",
+				"program": "${workspaceFolder:todo-manager}/cmd/server/main.go",
+				"env": { 
+					"MYSQL_HOST": "localhost",
+					"MYSQL_USER": "root",
+					"MYSQL_PASS": "a3KhLzJ6p8"
+				}
+			}
+		],
+		"compounds": [
+			{
+				"name": "Debug - All",
+				"configurations": ["Debug - Apiserver", "Debug - Todomanager"]
+			}
+		]
+	}
+}
