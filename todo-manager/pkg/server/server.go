@@ -14,13 +14,6 @@ import (
 
 const dbName = "todo"
 
-var todo = &todomgrpb.Todo{
-	Id:    100,
-	Text:  "bogus",
-	Done:  false,
-	Owner: "test_user",
-}
-
 // TodoManagerServer implements gRPC server for todo manager
 type TodoManagerServer struct {
 	config *Config
