@@ -1,6 +1,11 @@
 # Image URL to use all building/pushing image targets
 BIN ?= todomanager
-IMG ?= ${BIN}:latest
+IMG ?= ${BIN}
+
+export VER ?= $(shell git describe 2>/dev/null || echo "0.0.0")
+export COMMIT ?= $(shell git rev-parse HEAD 2>/dev/null || echo "0000000")
+export SHORT_COMMIT ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo "0000000")
+export DATE ?= $(shell date '+%FT%T%:z')
 
 all: test build
 
@@ -12,11 +17,12 @@ test: fmt vet
 build: fmt vet compile
 
 compile:
+	echo ${VER} ${COMMIT} ${DATE}
 	go build \
 		-ldflags "\
-		-X main.version=`git describe 2>/dev/null || echo "0.0.0"` \
-		-X main.commit=`git rev-parse HEAD` \
-		-X main.date=`date '+%FT%T%:z'`" \
+		-X main.version=${VER} \
+		-X main.commit=${COMMIT} \
+		-X main.date=${DATE}" \
 		-o bin/${BIN} ./cmd/server/main.go
 
 # Run directly
@@ -35,9 +41,9 @@ vet:
 generate:
 	go generate ./pkg/... ./cmd/...
 
-# Build the docker image from lacally built binary
-docker-build: build
-	docker build . -t ${IMG}
+# Build the docker image from locally built binary
+docker-build: 
+	docker build --build-arg ver=${VER} --build-arg commit=${COMMIT} . -t ${IMG}:latest -t ${IMG}:${SHORT_COMMIT}
 
 # Push the docker image
 docker-push:
