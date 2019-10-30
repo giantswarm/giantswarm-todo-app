@@ -18,13 +18,10 @@ metadata:
   name: todo-rolebinding
   namespace: todo
 roleRef:
-  kind: ClusterRole
+  kind: Role
   name: todo-role
   apiGroup: rbac.authorization.k8s.io
 subjects:
-- kind: ServiceAccount
-  name: todomanager
-  namespace: todo
-- kind: ServiceAccount
-  name: todomanager
-  namespace: todo
+  - kind: Group
+    apiGroup: rbac.authorization.k8s.io
+    name: system:serviceaccounts

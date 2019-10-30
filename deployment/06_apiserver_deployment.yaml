@@ -30,6 +30,12 @@ spec:
             - name: rest
               containerPort: 8080
               protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: rest
+            initialDelaySeconds: 2
+            periodSeconds: 5
           resources:
             {}
             
