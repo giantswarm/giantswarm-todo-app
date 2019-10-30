@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: todo-psp
+spec:
+  privileged: false
+  allowPrivilegeEscalation: false
+  hostNetwork: false
+  hostIPC: false
+  hostPID: false
+  fsGroup:
+    rule: MustRunAs
+    ranges:
+    - max: 65535
+      min: 1
+  runAsGroup:
+    rule: MustRunAs
+    ranges:
+    - max: 65535
+      min: 1
+  supplementalGroups:
+    rule: 'MustRunAs'
+    ranges:
+      - min: 1
+        max: 65535
+  runAsUser:
+    rule: MustRunAsNonRoot
+  seLinux:
+    rule: RunAsAny
+  volumes:
+  - secret
+
