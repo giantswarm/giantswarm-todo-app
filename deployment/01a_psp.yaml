@@ -8,6 +8,13 @@ spec:
   hostNetwork: false
   hostIPC: false
   hostPID: false
+  readOnlyRootFilesystem: true
+  allowedCapabilities:
+    - NET_ADMIN
+    - NET_RAW
+    - NET_BIND_SERVICE
+  requiredDropCapabilities:
+    - ALL
   fsGroup:
     rule: MustRunAs
     ranges:
@@ -29,4 +36,6 @@ spec:
     rule: RunAsAny
   volumes:
   - secret
+  - emptyDir
+  - configMap
 

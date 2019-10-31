@@ -27,6 +27,13 @@ spec:
             - name: grpc
               containerPort: 8090
               protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+                - grpc_health_probe
+                - -addr=localhost:8090
+            initialDelaySeconds: 2
+            periodSeconds: 5
           env:
             - name: "MYSQL_HOST"
               value: "todo-mysql.todo.svc.cluster.local"
