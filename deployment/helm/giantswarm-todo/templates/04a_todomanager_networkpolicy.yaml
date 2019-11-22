@@ -2,11 +2,14 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: todomanager-network-policy
-  namespace: todo
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "giantswarm-todo.labels" . | indent 4 }}
 spec:
   podSelector:
     matchLabels:
-      app: todomanager
+      app.kubernetes.io/name: {{ include "giantswarm-todo.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
   policyTypes:
   - Ingress
   - Egress
@@ -21,7 +24,7 @@ spec:
   - from:
     - namespaceSelector:
         matchLabels:
-          linkerd.io/control-plane-ns: linkerd
+          linkerd.io/control-plane-ns: {{ .Values.linkerdNamespace }}
   egress:
   - to:
     - podSelector:
@@ -45,4 +48,4 @@ spec:
   - to:
     - namespaceSelector:
         matchLabels:
-          linkerd.io/control-plane-ns: linkerd
+          linkerd.io/control-plane-ns: {{ .Values.linkerdNamespace }}

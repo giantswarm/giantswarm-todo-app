@@ -3,20 +3,24 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: todo-role
-  namespace: todo
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "giantswarm-todo.labels" . | indent 4 }}
 rules:
 - apiGroups: ['policy']
   resources: ['podsecuritypolicies']
   verbs:     ['use']
   resourceNames:
-  - todo-psp
+  - {{ .Release.Name }}-todo-psp
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: todo-rolebinding
-  namespace: todo
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "giantswarm-todo.labels" . | indent 4 }}
 roleRef:
   kind: Role
   name: todo-role

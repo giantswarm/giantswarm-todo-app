@@ -3,20 +3,22 @@ apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
   name: todomanager
-  namespace: todo
+  namespace: {{ .Release.Namespace }}
   labels:
-    app: todomanager
+{{ include "giantswarm-todo.labels" . | indent 4 }}
 spec:
-  replicas: 3
+  replicas: {{ .Values.todomanagerReplicaCount }}
   selector:
     matchLabels:
-      app: todomanager
+      app.kubernetes.io/name: {{ include "giantswarm-todo.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
   strategy:
     type: RollingUpdate
   template:
     metadata:
       labels:
-        app: todomanager
+        app.kubernetes.io/name: {{ include "giantswarm-todo.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       serviceAccountName: todomanager
       affinity:
@@ -27,23 +29,31 @@ spec:
                 topologyKey: "kubernetes.io/hostname"
                 labelSelector:
                   matchExpressions:
-                    - key: "app"
+                    - key: "app.kubernetes.io/name"
                       operator: In
                       values:
-                        - todomanager
+                        - {{ include "giantswarm-todo.name" . }}
+                    - key: "app.kubernetes.io/instance"
+                      operator: In
+                      values:
+                        - {{ .Release.Name }}
             - weight: 100
               podAffinityTerm:
                 topologyKey: "failure-domain.beta.kubernetes.io/zone"
                 labelSelector:
                   matchExpressions:
-                    - key: "app"
+                    - key: "app.kubernetes.io/name"
                       operator: In
                       values:
-                        - todomanager
+                        - {{ include "giantswarm-todo.name" . }}
+                    - key: "app.kubernetes.io/instance"
+                      operator: In
+                      values:
+                        - {{ .Release.Name }}
       containers:
         - name: todomanager
-          image: "todomanager:latest"
-          imagePullPolicy: "Never"
+          image: "{{ .Values.todomanagerImage.registry }}{{ .Values.todomanagerImage.name }}:{{ .Values.todomanagerImage.tag }}"
+          imagePullPolicy: "{{ .Values.todomanagerImage.pullPolicy }}"
           ports:
             - name: grpc
               containerPort: 8090
@@ -57,7 +67,7 @@ spec:
             periodSeconds: 5
           env:
             - name: "MYSQL_HOST"
-              value: "todo-mysql.todo.svc.cluster.local"
+              value: "todo-mysql.{{ .Release.Namespace }}.svc.cluster.local"
             - name: "MYSQL_USER"
               value: "root"
             - name: "MYSQL_PASS"
@@ -66,5 +76,5 @@ spec:
                   name: todo-mysql
                   key: mysql-root-password
           resources:
-            {}
+            {{- toYaml .Values.resources | nindent 12 }}
             

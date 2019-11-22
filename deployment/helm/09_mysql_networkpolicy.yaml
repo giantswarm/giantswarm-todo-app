@@ -18,6 +18,10 @@ spec:
     ports:
     - protocol: TCP
       port: 3306
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          linkerd.io/control-plane-ns: linkerd
   egress:
   - to:
     - namespaceSelector:
@@ -31,3 +35,7 @@ spec:
       port: 53
     - protocol: UDP
       port: 53
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          linkerd.io/control-plane-ns: linkerd

@@ -1,7 +1,9 @@
 apiVersion: extensions/v1beta1
 kind: PodSecurityPolicy
 metadata:
-  name: todo-psp
+  name: {{ .Release.Name }}-todo-psp
+  labels:
+{{ include "giantswarm-todo.labels" . | indent 4 }}
 spec:
   privileged: false
   allowPrivilegeEscalation: false
