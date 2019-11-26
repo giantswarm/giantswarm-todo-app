@@ -35,7 +35,9 @@ Create chart name and version as used by the chart label.
 Common labels
 */}}
 {{- define "giantswarm-todo.labels" -}}
+{{- if .Name -}}
 app.kubernetes.io/name: {{ .Name }}
+{{ end -}}
 helm.sh/chart: {{ include "giantswarm-todo.chart" .Root }}
 app.kubernetes.io/instance: {{ .Root.Release.Name }}
 {{- if .Root.Chart.AppVersion }}
@@ -79,10 +81,18 @@ podAntiAffinity:
 {{- end -}}
 
 {{/*
+Generic labels
+*/}}
+{{- define "giantswarm-todo.generic.labels" -}}
+{{ $data := dict "Root" $ "Name" "" }}
+{{ include "giantswarm-todo.labels" $data }}
+{{- end -}}
+
+{{/*
 Todomanager labels
 */}}
 {{- define "giantswarm-todo.todomanager.labels" -}}
-{{$data := dict "Root" $ "Name" "todomanager"}}
+{{ $data := dict "Root" $ "Name" "todomanager" }}
 {{ include "giantswarm-todo.labels" $data }}
 {{- end -}}
 
@@ -98,6 +108,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Todomanager antiaffinity
 */}}
 {{- define "giantswarm-todo.todomanager.antiaffinity" -}}
-{{$data := dict "Root" $ "Name" "todomanager"}}
+{{ $data := dict "Root" $ "Name" "todomanager" }}
 {{ include "giantswarm-todo.antiaffinity" $data }}
 {{- end -}}
