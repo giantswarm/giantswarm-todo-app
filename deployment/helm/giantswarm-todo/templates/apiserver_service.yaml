@@ -7,7 +7,7 @@ metadata:
   labels:
 {{- include "giantswarm-todo.apiserver.labels" . | indent 4 }}
 spec:
-  type: .Values.apiserverServiceType
+  type: {{ .Values.apiserverServiceType }}
   selector:
 {{ include "giantswarm-todo.apiserver.match-labels" . | indent 4 }}
   ports:
