@@ -22,6 +22,9 @@ linkerdNamespace: linkerd
 apiserverServiceType: "ClusterIP"
 todomanagerServiceType: "ClusterIP"
 
+mysql:
+  mysqlDatabase: todo
+
 ingress:
   enabled: false
   annotations: {}
@@ -37,8 +40,3 @@ ingress:
   #      - chart-example.local
 
 
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
