@@ -111,3 +111,27 @@ Todomanager antiaffinity
 {{ $data := dict "Root" $ "Name" "todomanager" }}
 {{ include "giantswarm-todo.antiaffinity" $data }}
 {{- end -}}
+
+{{/*
+Apiserver labels
+*/}}
+{{- define "giantswarm-todo.apiserver.labels" -}}
+{{ $data := dict "Root" $ "Name" "apiserver" }}
+{{ include "giantswarm-todo.labels" $data }}
+{{- end -}}
+
+{{/*
+Apiserver match labels
+*/}}
+{{- define "giantswarm-todo.apiserver.match-labels" -}}
+app.kubernetes.io/name: apiserver
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end -}}
+
+{{/*
+Apiserver antiaffinity
+*/}}
+{{- define "giantswarm-todo.apiserver.antiaffinity" -}}
+{{ $data := dict "Root" $ "Name" "apiserver" }}
+{{ include "giantswarm-todo.antiaffinity" $data }}
+{{- end -}}

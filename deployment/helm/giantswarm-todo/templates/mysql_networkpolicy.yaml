@@ -1,14 +1,14 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: todomanager-network-policy
+  name: mysql-network-policy
   namespace: {{ .Release.Namespace }}
   labels:
-{{- include "giantswarm-todo.todomanager.labels" . | indent 4 }}
+{{- include "giantswarm-todo.generic.labels" . | indent 4 }}
 spec:
   podSelector:
     matchLabels:
-{{ include "giantswarm-todo.todomanager.match-labels" . | indent 6 }}
+      app: todo-mysql
   policyTypes:
   - Ingress
   - Egress
@@ -16,20 +16,13 @@ spec:
   - from:
     - podSelector:
         matchLabels:
-          app: apiserver
-    ports:
-    - protocol: TCP
-      port: 8090
-  - from:
-{{ include "giantswarm-todo.netpol.linkerd" . | indent 4 }}
-  egress:
-  - to:
-    - podSelector:
-        matchLabels:
-          app: todo-mysql
+          app: todomanager
     ports:
     - protocol: TCP
       port: 3306
+  - from:
+{{ include "giantswarm-todo.netpol.linkerd" . | indent 4 }}
+  egress:
   - to:
 {{ include "giantswarm-todo.netpol.kube-dns" . | indent 4 }}
   - to:

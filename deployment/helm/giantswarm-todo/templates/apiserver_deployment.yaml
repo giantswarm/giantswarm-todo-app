@@ -1,0 +1,42 @@
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: apiserver
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{- include "giantswarm-todo.apiserver.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.apiserverReplicaCount }}
+  selector:
+    matchLabels:
+{{ include "giantswarm-todo.apiserver.match-labels" . | indent 6 }}
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+{{ include "giantswarm-todo.apiserver.match-labels" . | indent 8 }}
+    spec:
+      serviceAccountName: apiserver
+      affinity:
+{{- include "giantswarm-todo.apiserver.antiaffinity" . | indent 8 }}
+      containers:
+        - name: apiserver
+          image: "apiserver:latest"
+          imagePullPolicy: "Never"
+          env:
+            - name: "TODO_URL"
+              value: "todomanager:8090"
+          ports:
+            - name: rest
+              containerPort: 8080
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: rest
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
