@@ -16,7 +16,7 @@ spec:
   - from:
     - podSelector:
         matchLabels:
-          app: apiserver
+{{ include "giantswarm-todo.apiserver.match-labels" . | indent 10 }}
     ports:
     - protocol: TCP
       port: 8090

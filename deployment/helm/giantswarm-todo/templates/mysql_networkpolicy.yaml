@@ -16,7 +16,7 @@ spec:
   - from:
     - podSelector:
         matchLabels:
-          app: todomanager
+{{ include "giantswarm-todo.todomanager.match-labels" . | indent 10 }}
     ports:
     - protocol: TCP
       port: 3306
