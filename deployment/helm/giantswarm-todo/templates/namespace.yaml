@@ -1,8 +1,11 @@
+{{- if (.Values.installNamespace) -}}
+---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: {{ .Release.Namespace }}
+  name: {{ .Values.namespace }}
   labels:
 {{- include "giantswarm-todo.generic.labels" . | indent 4 }}
-  annotations:
-    linkerd.io/inject: enabled
+#  annotations:
+#    linkerd.io/inject: enabled
+{{- end -}}

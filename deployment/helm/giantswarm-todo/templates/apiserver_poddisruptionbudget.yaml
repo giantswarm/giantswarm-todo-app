@@ -3,7 +3,7 @@ apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
   name: apimanager
-  namespace: {{ .Release.Name }}
+  namespace: {{ .Values.namespace }}
   labels:
 {{- include "giantswarm-todo.apiserver.labels" . | indent 4 }}
 spec:

@@ -3,7 +3,7 @@ apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
   name: apiserver
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Values.namespace }}
   labels:
 {{- include "giantswarm-todo.apiserver.labels" . | indent 4 }}
 spec:
