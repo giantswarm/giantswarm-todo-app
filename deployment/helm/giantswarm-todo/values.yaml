@@ -1,8 +1,5 @@
 # Default values for giantswarm-todo.
 
-installNamespace: true
-namespace: todo
-
 todomanagerReplicaCount: 3
 apiserverReplicaCount: 3
 

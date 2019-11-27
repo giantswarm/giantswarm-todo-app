@@ -3,7 +3,7 @@ apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
   name: todomanager
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
   labels:
 {{- include "giantswarm-todo.todomanager.labels" . | indent 4 }}
 spec:
@@ -38,7 +38,7 @@ spec:
             periodSeconds: 5
           env:
             - name: "MYSQL_HOST"
-              value: "todo-mysql.{{ .Values.namespace }}.svc.cluster.local"
+              value: "todo-mysql.{{ .Release.Namespace }}.svc.cluster.local"
             - name: "MYSQL_USER"
               value: "root"
             - name: "MYSQL_PASS"
