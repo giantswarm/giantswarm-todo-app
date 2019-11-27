@@ -1,0 +1,81 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: Role
+metadata:
+  name: namespace-tagger
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": "pre-install"
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": "hook-succeeded,hook-failed"
+  labels:
+    app: namespace-tagger
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  resourceNames:
+  - {{ .Release.Namespace }}
+  verbs:
+  - "*"
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: namespace-tagger
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": "pre-install"
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": "hook-succeeded,hook-failed"
+  labels:
+    app: namespace-tagger
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+  name: namespace-tagger
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": "pre-install"
+    "helm.sh/hook-weight": "-4"
+    "helm.sh/hook-delete-policy": "hook-succeeded,hook-failed"
+  labels:
+    app: namespace-tagger
+subjects:
+  - kind: ServiceAccount
+    name: namespace-tagger
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: Role
+  name: namespace-tagger
+  namespace: {{ .Release.Namespace }}
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: namespace-tagger
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": "pre-install"
+    "helm.sh/hook-delete-policy": "hook-succeeded,hook-failed"
+  labels:
+    app: namespace-tagger
+spec:
+  template:
+    spec:
+      serviceAccountName: namespace-tagger
+      containers:
+      - name: namespace-tagger
+        image: "quay.io/giantswarm/docker-kubectl:latest"
+        command:
+        - /bin/sh
+        - -e
+        - -x
+        - -c
+        - >-
+          kubectl annotate ns {{ .Release.Namespace }} linkerd.io/inject=enable
+      restartPolicy: Never
+  backoffLimit: 6
