@@ -38,12 +38,13 @@ Common labels
 {{- if .Name -}}
 app.kubernetes.io/name: {{ .Name }}
 {{ end -}}
-helm.sh/chart: {{ include "giantswarm-todo.chart" .Root }}
-app.kubernetes.io/instance: {{ .Root.Release.Name }}
+app.kubernetes.io/instance: {{ include "giantswarm-todo.chart-fullname" .Root }}
 {{- if .Root.Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Root.Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Root.Release.Service }}
+app.kubernetes.io/part-of: {{  .Root.Chart.Name }}
+helm.sh/chart: {{ include "giantswarm-todo.chart" .Root }}
 {{- end -}}
 
 {{/*
