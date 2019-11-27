@@ -1,5 +1,7 @@
 # Default values for giantswarm-todo.
 
+clusterDomain: cluster.local
+
 todomanagerReplicaCount: 3
 apiserverReplicaCount: 3
 
