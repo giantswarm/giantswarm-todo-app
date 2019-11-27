@@ -76,6 +76,6 @@ spec:
         - -x
         - -c
         - >-
-          kubectl annotate ns {{ .Release.Namespace }} linkerd.io/inject=enable
+          kubectl annotate ns {{ .Release.Namespace }} linkerd.io/inject=enabled && sleep 1
       restartPolicy: Never
   backoffLimit: 6

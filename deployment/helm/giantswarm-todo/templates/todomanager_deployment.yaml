@@ -38,13 +38,13 @@ spec:
             periodSeconds: 5
           env:
             - name: "MYSQL_HOST"
-              value: "todo-mysql.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}"
+              value: "{{ .Release.Name }}-mysql.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}"
             - name: "MYSQL_USER"
               value: "root"
             - name: "MYSQL_PASS"
               valueFrom:
                 secretKeyRef:
-                  name: todo-mysql
+                  name: {{ .Release.Name }}-mysql
                   key: mysql-root-password
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
