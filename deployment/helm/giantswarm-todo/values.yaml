@@ -1,0 +1,44 @@
+# Default values for giantswarm-todo.
+
+clusterDomain: cluster.local
+
+todomanagerReplicaCount: 3
+apiserverReplicaCount: 3
+
+todomanagerImage:
+  registry: ""
+  name: todomanager
+  tag: latest
+  pullPolicy: IfNotPresent
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+linkerdNamespace: linkerd
+
+apiserverServiceType: "ClusterIP"
+todomanagerServiceType: "ClusterIP"
+
+mysql:
+  mysqlDatabase: todo
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: todo.local
+      paths: []
+
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+

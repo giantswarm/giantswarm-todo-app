@@ -1,0 +1,13 @@
+---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: todomanager-pdb
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{- include "giantswarm-todo.todomanager.labels" . | indent 4 }}
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+{{ include "giantswarm-todo.todomanager.match-labels" . | indent 6 }}

@@ -1,0 +1,51 @@
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: todomanager
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{- include "giantswarm-todo.todomanager.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.todomanagerReplicaCount }}
+  selector:
+    matchLabels:
+{{ include "giantswarm-todo.todomanager.match-labels" . | indent 6 }}
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+{{ include "giantswarm-todo.todomanager.match-labels" . | indent 8 }}
+    spec:
+      serviceAccountName: todomanager
+      affinity:
+{{- include "giantswarm-todo.todomanager.antiaffinity" . | indent 8 }}
+      containers:
+        - name: todomanager
+          image: "{{ .Values.todomanagerImage.registry }}{{ .Values.todomanagerImage.name }}:{{ .Values.todomanagerImage.tag }}"
+          imagePullPolicy: "{{ .Values.todomanagerImage.pullPolicy }}"
+          ports:
+            - name: grpc
+              containerPort: 8090
+              protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+                - grpc_health_probe
+                - -addr=localhost:8090
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          env:
+            - name: "MYSQL_HOST"
+              value: "{{ .Release.Name }}-mysql.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}"
+            - name: "MYSQL_USER"
+              value: "root"
+            - name: "MYSQL_PASS"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-mysql
+                  key: mysql-root-password
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+            

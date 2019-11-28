@@ -1,0 +1,13 @@
+---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: apimanager
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{- include "giantswarm-todo.apiserver.labels" . | indent 4 }}
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+{{ include "giantswarm-todo.apiserver.match-labels" . | indent 6 }}
