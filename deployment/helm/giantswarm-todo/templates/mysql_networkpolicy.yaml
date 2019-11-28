@@ -8,7 +8,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app: todo-mysql
+      app: {{ .Release.Name }}-mysql
   policyTypes:
   - Ingress
   - Egress
