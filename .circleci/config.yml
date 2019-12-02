@@ -4,4 +4,5 @@ jobs:
     machine: true
     steps:
       - checkout
+      - run: cd todo-manager && make docker-build
       - run: cd api-server && make docker-build
