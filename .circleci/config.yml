@@ -9,6 +9,7 @@ jobs:
     working_directory: ~/giantswarm-todo
     steps:
       - checkout
+      - run: pwd && ls -la
       - save_cache:
           key: repo-{{ .Environment.CIRCLE_SHA1 }}
           paths:
@@ -22,17 +23,19 @@ jobs:
           key: repo-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
           key: gomodules-cache
+      - run: architect project version
       - run: make docker-build
       - run: echo -n "${QUAY_PASSWORD}" | docker login --username "${QUAY_USERNAME}" --password-stdin quay.io 
       - run: make docker-push
       - save_cache:
           key: gomodules-cache
           paths:
-            - $GOPATH/pkg/mod
+            - ${GOPATH}/pkg/mod
 workflows:
   version: 2
   build:
     jobs:
+      - checkout_code
       - build_apiserver:
           requires:
             - checkout_code
