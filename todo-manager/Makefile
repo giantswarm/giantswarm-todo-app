@@ -45,7 +45,6 @@ generate:
 # Build the docker image from locally built binary
 docker-build: 
 	docker build --build-arg ver=${VER} --build-arg commit=${COMMIT} . -t ${IMG}:latest -t ${IMG}:${IMG_VER}
-	echo ${IMG}:${IMG_VER} > .${BIN}.version
 
 # Push the docker image
 docker-push:

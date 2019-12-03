@@ -9,6 +9,7 @@ jobs:
     steps:
       - checkout
       - run: docker run -v $(pwd):/workdir --workdir /workdir --rm quay.io/giantswarm/architect:latest project version > api-server/.version
+      - run: cat api-server/.version
       - run: cp api-server/.version todo-manager/
       - save_cache:
           key: repo-{{ .Environment.CIRCLE_SHA1 }}
