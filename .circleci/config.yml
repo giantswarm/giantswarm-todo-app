@@ -24,18 +24,17 @@ jobs:
     working_directory:
       ~/giantswarm-todo/api-server
     steps:
-      - run: echo "export PATH=$PATH:~/bin >> $BASH_ENV"
+      - run: echo $GOPATH
       - restore_cache:
           key: repo-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
           key: apiserver-gomodules-cache-{{ checksum "~/giantswarm-todo/api-server/go.sum" }}
       - restore_cache:
           key: architect
-      - run: echo $PATH && ls -la 
       - run: architect project version
-      - run: make docker-build
+      - run: IMG_VER=$(architect project version) make docker-build
       - run: echo -n "${QUAY_PASSWORD}" | docker login --username "${QUAY_USERNAME}" --password-stdin quay.io 
-      - run: make docker-push
+      - run: IMG_VER=$(architect project version) make docker-push
       - save_cache:
           key: apiserver-gomodules-cache-{{ checksum "~/giantswarm-todo/api-server/go.sum" }}
           paths:
