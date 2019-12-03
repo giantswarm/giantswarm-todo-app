@@ -33,6 +33,10 @@ jobs:
           key: architect
       - run: architect project version
       - run: IMG_VER=$(architect project version) make docker-build
+      - run: ls -la /home/circleci/.go_workspace
+      - run: ls -la /usr/local/go_workspace
+      - run: ls -la /home/circleci/.go_workspace/pkg/mod || true
+      - run: ls -la /usr/local/go_workspace/pkg/mod || true
       - run: echo -n "${QUAY_PASSWORD}" | docker login --username "${QUAY_USERNAME}" --password-stdin quay.io 
       - run: IMG_VER=$(architect project version) make docker-push
       - save_cache:
