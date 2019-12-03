@@ -24,31 +24,36 @@ jobs:
     working_directory:
       ~/giantswarm-todo/api-server
     steps:
-      - run: echo $GOPATH
       - restore_cache:
           key: repo-{{ .Environment.CIRCLE_SHA1 }}
-      - restore_cache:
-          key: apiserver-gomodules-cache-{{ checksum "~/giantswarm-todo/api-server/go.sum" }}
       - restore_cache:
           key: architect
       - run: architect project version
       - run: IMG_VER=$(architect project version) make docker-build
-      - run: ls -la /home/circleci/.go_workspace
-      - run: ls -la /usr/local/go_workspace
-      - run: ls -la /home/circleci/.go_workspace/pkg/mod || true
-      - run: ls -la /usr/local/go_workspace/pkg/mod || true
       - run: echo -n "${QUAY_PASSWORD}" | docker login --username "${QUAY_USERNAME}" --password-stdin quay.io 
       - run: IMG_VER=$(architect project version) make docker-push
-      - save_cache:
-          key: apiserver-gomodules-cache-{{ checksum "~/giantswarm-todo/api-server/go.sum" }}
-          paths:
-            - ${GOPATH}/pkg/mod
+  build_todomanager:
+    machine: true
+    working_directory:
+      ~/giantswarm-todo/todo-manager
+    steps:
+      - restore_cache:
+          key: repo-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          key: architect
+      - run: architect project version
+      - run: IMG_VER=$(architect project version) make docker-build
+      - run: echo -n "${QUAY_PASSWORD}" | docker login --username "${QUAY_USERNAME}" --password-stdin quay.io 
+      - run: IMG_VER=$(architect project version) make docker-push
 workflows:
   version: 2
   build:
     jobs:
       - checkout_code
       - build_apiserver:
+          requires:
+            - checkout_code
+      - build_todomanager:
           requires:
             - checkout_code
   
