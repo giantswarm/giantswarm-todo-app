@@ -4,6 +4,8 @@ orbs:
 
 jobs:
   checkout_code:
+    docker:
+      - image: circleci/go
     working_directory: ~/giantswarm-todo
     steps:
       - checkout
