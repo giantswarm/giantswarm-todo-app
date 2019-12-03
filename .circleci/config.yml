@@ -45,6 +45,7 @@ jobs:
       - run: IMG_VER=$(architect project version) make docker-build
       - run: echo -n "${QUAY_PASSWORD}" | docker login --username "${QUAY_USERNAME}" --password-stdin quay.io 
       - run: IMG_VER=$(architect project version) make docker-push
+
 workflows:
   version: 2
   build:
@@ -56,4 +57,15 @@ workflows:
       - build_todomanager:
           requires:
             - checkout_code
-  
+      - architect/push-to-app-catalog:
+          name: "package and push giantswarm-todo-app chart"
+          requires:
+            - build_apiserver
+            - build_todomanager
+          app_catalog: "giantswarm-playground-catalog"
+          app_catalog_test: "giantswarm-playground-test-catalog"
+          chart: "giantswarm-todo-app"
+          # Trigger job on git tag.
+          filters:
+            tags:
+              only: /^v.*/

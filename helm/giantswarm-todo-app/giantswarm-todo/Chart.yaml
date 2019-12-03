@@ -9,5 +9,4 @@ maintainers:
 name: giantswarm-todo
 sources:
 - https://github.com/giantswarm/blog-i-want-it-all
-  #version: [[ .Version ]]
-version: 0.1.0
+version: [[ .Version ]]
