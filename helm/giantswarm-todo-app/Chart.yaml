@@ -6,7 +6,7 @@ kubeVersion: ^1.10.0-0
 maintainers:
 - email: hello@giantswarm.io
   name: Giantswarm Team
-name: giantswarm-todo
+name: giantswarm-todo-app
 sources:
 - https://github.com/giantswarm/blog-i-want-it-all
 version: [[ .Version ]]
