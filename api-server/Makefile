@@ -49,4 +49,5 @@ docker-build:
 
 # Push the docker image
 docker-push:
+	docker push ${IMG}:latest
 	docker push ${IMG}:${IMG_VER}
