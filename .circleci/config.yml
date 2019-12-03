@@ -10,25 +10,35 @@ jobs:
     steps:
       - checkout
       - run: pwd && ls -la
+      - run: mkdir ~/bin && curl -sL https://github.com/giantswarm/architect/releases/download/0e9225d/architect -o ~/bin/architect && chmod +x ~/bin/architect
       - save_cache:
           key: repo-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - ~/giantswarm_todo
+      - save_cache:
+          key: architect
+          paths:
+            - ~/bin
   build_apiserver:
     machine: true
     working_directory:
       ~/giantswarm-todo/api-server
+    environment:
+      PATH: ${PATH}:~/bin
     steps:
       - restore_cache:
           key: repo-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
-          key: gomodules-cache
+          key: apiserver-gomodules-cache-{{ checksum "~/giantswarm-todo/api-server/go.sum" }}
+      - restore_cache:
+          key: architect
+      - run: echo $PATH && ls -la 
       - run: architect project version
       - run: make docker-build
       - run: echo -n "${QUAY_PASSWORD}" | docker login --username "${QUAY_USERNAME}" --password-stdin quay.io 
       - run: make docker-push
       - save_cache:
-          key: gomodules-cache
+          key: apiserver-gomodules-cache-{{ checksum "~/giantswarm-todo/api-server/go.sum" }}
           paths:
             - ${GOPATH}/pkg/mod
 workflows:
