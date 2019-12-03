@@ -9,16 +9,10 @@ jobs:
     working_directory: ~/giantswarm-todo
     steps:
       - checkout
-      - run: pwd && ls -la
-      - run: mkdir ~/bin && curl -sL https://github.com/giantswarm/architect/releases/download/0e9225d/architect -o ~/bin/architect && chmod +x ~/bin/architect
       - save_cache:
           key: repo-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - ~/giantswarm-todo
-      - save_cache:
-          key: architect
-          paths:
-            - ~/bin
   build_apiserver:
     machine: true
     working_directory:
@@ -26,12 +20,10 @@ jobs:
     steps:
       - restore_cache:
           key: repo-{{ .Environment.CIRCLE_SHA1 }}
-      - restore_cache:
-          key: architect
-      - run: architect project version
-      - run: IMG_VER=$(architect project version) make docker-build
+      - run: docker run -v $(pwd):/workdir --workdir /workdir --rm quay.io/giantswarm/architect:latest project version > .as-version
+      - run: IMG_VER=$(cat .version) make docker-build
       - run: echo -n "${QUAY_PASSWORD}" | docker login --username "${QUAY_USERNAME}" --password-stdin quay.io 
-      - run: IMG_VER=$(architect project version) make docker-push
+      - run: IMG_VER=$(cat .as-version) make docker-push
   build_todomanager:
     machine: true
     working_directory:
@@ -39,12 +31,10 @@ jobs:
     steps:
       - restore_cache:
           key: repo-{{ .Environment.CIRCLE_SHA1 }}
-      - restore_cache:
-          key: architect
-      - run: architect project version
-      - run: IMG_VER=$(architect project version) make docker-build
+      - run: docker run -v $(pwd):/workdir --workdir /workdir --rm quay.io/giantswarm/architect:latest project version > .tm-version
+      - run: IMG_VER=$(cat .tm-version) make docker-build
       - run: echo -n "${QUAY_PASSWORD}" | docker login --username "${QUAY_USERNAME}" --password-stdin quay.io 
-      - run: IMG_VER=$(architect project version) make docker-push
+      - run: IMG_VER=$(cat .tm-version) make docker-push
 
 workflows:
   version: 2
