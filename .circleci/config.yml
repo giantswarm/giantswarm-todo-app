@@ -23,9 +23,8 @@ jobs:
     machine: true
     working_directory:
       ~/giantswarm-todo/api-server
-    environment:
-      PATH: ${PATH}:~/bin
     steps:
+      - run: echo "export PATH=$PATH:~/bin >> $BASH_ENV"
       - restore_cache:
           key: repo-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
