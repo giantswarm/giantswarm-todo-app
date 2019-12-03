@@ -14,7 +14,7 @@ jobs:
       - save_cache:
           key: repo-{{ .Environment.CIRCLE_SHA1 }}
           paths:
-            - ~/giantswarm_todo
+            - ~/giantswarm-todo
       - save_cache:
           key: architect
           paths:
