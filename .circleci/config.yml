@@ -6,3 +6,6 @@ jobs:
       - checkout
       - run: cd todo-manager && make docker-build
       - run: cd api-server && make docker-build
+      - run: echo -n "${QUAY_PASSWORD}" | docker login --username "${QUAY_USERNAME}" --password-stdin quay.io
+      - run: cd todo-manager && make docker-push
+      - run: cd api-server && make docker-push
