@@ -62,7 +62,6 @@ func (t *Router) ListTodos(w http.ResponseWriter, r *http.Request) {
 		render.Render(w, r, middleware.ErrRender(err))
 		return
 	}
-	r.Write()
 	// FIXME: need to return a list here!
 	for {
 		res, err := stream.Recv()
