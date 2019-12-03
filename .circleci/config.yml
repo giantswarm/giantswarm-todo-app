@@ -4,11 +4,12 @@ orbs:
 
 jobs:
   checkout_code:
-    docker:
-      - image: circleci/golang
+    machine: true
     working_directory: ~/giantswarm-todo
     steps:
       - checkout
+      - run: docker run -v $(pwd):/workdir --workdir /workdir --rm quay.io/giantswarm/architect:latest project version > api-server/.version
+      - run: cp api-server/.version todo-manager/
       - save_cache:
           key: repo-{{ .Environment.CIRCLE_SHA1 }}
           paths:
@@ -20,10 +21,9 @@ jobs:
     steps:
       - restore_cache:
           key: repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: docker run -v $(pwd):/workdir --workdir /workdir --rm quay.io/giantswarm/architect:latest project version > .as-version
       - run: IMG_VER=$(cat .version) make docker-build
       - run: echo -n "${QUAY_PASSWORD}" | docker login --username "${QUAY_USERNAME}" --password-stdin quay.io 
-      - run: IMG_VER=$(cat .as-version) make docker-push
+      - run: IMG_VER=$(cat .version) make docker-push
   build_todomanager:
     machine: true
     working_directory:
@@ -31,10 +31,9 @@ jobs:
     steps:
       - restore_cache:
           key: repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run: docker run -v $(pwd):/workdir --workdir /workdir --rm quay.io/giantswarm/architect:latest project version > .tm-version
-      - run: IMG_VER=$(cat .tm-version) make docker-build
+      - run: IMG_VER=$(cat .version) make docker-build
       - run: echo -n "${QUAY_PASSWORD}" | docker login --username "${QUAY_USERNAME}" --password-stdin quay.io 
-      - run: IMG_VER=$(cat .tm-version) make docker-push
+      - run: IMG_VER=$(cat .version) make docker-push
 
 workflows:
   version: 2
