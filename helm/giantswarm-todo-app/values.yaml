@@ -6,9 +6,15 @@ todomanagerReplicaCount: 3
 apiserverReplicaCount: 3
 
 todomanagerImage:
-  registry: ""
-  name: todomanager
-  tag: latest
+  registry: quay.io
+  name: giantswarm/giantswarm-todo-todomanager
+  tag: [[ .Version ]]
+  pullPolicy: IfNotPresent
+
+apiserverImage:
+  registry: quay.io
+  name: giantswarm/giantswarm-todo-apiserver
+  tag: [[ .Version ]]
   pullPolicy: IfNotPresent
 
 resources:
