@@ -23,7 +23,7 @@ spec:
 {{- include "giantswarm-todo.todomanager.antiaffinity" . | indent 8 }}
       containers:
         - name: todomanager
-          image: "{{ .Values.todomanagerImage.registry }}{{ .Values.todomanagerImage.name }}:{{ .Values.todomanagerImage.tag }}"
+          image: "{{ .Values.todomanagerImage.registry }}/{{ .Values.todomanagerImage.name }}:{{ .Values.todomanagerImage.tag }}"
           imagePullPolicy: "{{ .Values.todomanagerImage.pullPolicy }}"
           ports:
             - name: grpc
