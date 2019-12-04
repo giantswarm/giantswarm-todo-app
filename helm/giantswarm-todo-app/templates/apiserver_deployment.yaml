@@ -23,8 +23,8 @@ spec:
 {{- include "giantswarm-todo.apiserver.antiaffinity" . | indent 8 }}
       containers:
         - name: apiserver
-          image: "apiserver:latest"
-          imagePullPolicy: "Never"
+          image: "{{ .Values.apiserverImage.registry }}/{{ .Values.apiserverImage.name }}:{{ .Values.apiserverImage.tag }}"
+          imagePullPolicy: "{{ .Values.apiserverImage.pullPolicy }}"
           env:
             - name: "TODO_URL"
               value: "todomanager:8090"
