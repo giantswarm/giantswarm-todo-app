@@ -17,6 +17,12 @@ apiserverImage:
   tag: [[ .Version ]]
   pullPolicy: IfNotPresent
 
+kubectlImage:
+  registry: quay.io
+  name: giantswarm/docker-kubectl
+  tag: 62e9da2b9b90f4bffa1d244169a6a13977bf23d6
+  pullPolicy: IfNotPresent
+
 resources:
   limits:
     cpu: 100m
