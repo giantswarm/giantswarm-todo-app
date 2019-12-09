@@ -11,7 +11,7 @@ RUN make
 
 FROM alpine:3.10  
 WORKDIR /
-RUN adduser -D -H nouser
-USER nouser
+RUN adduser -u 1010 -D -H nouser
+USER 1010
 COPY --from=builder /tmp/src/bin/apiserver /apiserver
 CMD ["/apiserver"]
