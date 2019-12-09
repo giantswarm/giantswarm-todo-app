@@ -20,7 +20,7 @@ apiserverImage:
 kubectlImage:
   registry: quay.io
   name: giantswarm/docker-kubectl
-  tag: 62e9da2b9b90f4bffa1d244169a6a13977bf23d6
+  tag: 933ac043b7bec33104aac58b16849ea28bace26c
   pullPolicy: IfNotPresent
 
 resources:
