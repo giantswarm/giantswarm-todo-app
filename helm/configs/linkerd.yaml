@@ -1,4 +1,4 @@
 Identity:
   Issuer:
-    Scheme: linkerd.io/cert-manager" 
+    Scheme: "linkerd.io/cert-manager" 
 GrafanaUserRole: Admin
