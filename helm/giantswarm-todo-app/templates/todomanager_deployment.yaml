@@ -33,7 +33,7 @@ spec:
             exec:
               command:
                 - grpc_health_probe
-                - -addr=localhost:8090
+                - -addr=127.0.0.1:8090
             initialDelaySeconds: 2
             periodSeconds: 5
           env:

@@ -5,8 +5,8 @@ image: "mysql"
 imageTag: "5.7.14"
 
 busybox:
-  image: "busybox"
-  tag: "1.29.3"
+  image: "quay.io/giantswarm/docker-kubectl"
+  tag: "933ac043b7bec33104aac58b16849ea28bace26c"
 
 testFramework:
   enabled: true
