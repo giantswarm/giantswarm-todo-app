@@ -8,13 +8,13 @@ apiserverReplicaCount: 3
 todomanagerImage:
   registry: quay.io
   name: giantswarm/giantswarm-todo-todomanager
-  tag: latest
+  tag: [[ .Version ]]
   pullPolicy: IfNotPresent
 
 apiserverImage:
   registry: quay.io
   name: giantswarm/giantswarm-todo-apiserver
-  tag: latest
+  tag: [[ .Version ]]
   pullPolicy: IfNotPresent
 
 kubectlImage:

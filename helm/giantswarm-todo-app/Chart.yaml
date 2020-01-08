@@ -1,5 +1,5 @@
 apiVersion: v1
-appVersion: 11.17
+appVersion: [[ .Version ]]
 description: 'A sample microservice TODO management application.'
 home: https://giantswarm.io
 kubeVersion: ^1.10.0-0
@@ -9,5 +9,5 @@ maintainers:
 name: giantswarm-todo-app
 sources:
 - https://github.com/giantswarm/blog-i-want-it-all
-version: 0.2.0
-#version: [[ .Version ]]
+- https://github.com/giantswarm/giantswarm-todo-app/
+version: [[ .Version ]]
