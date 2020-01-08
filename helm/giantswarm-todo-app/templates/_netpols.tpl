@@ -6,13 +6,19 @@ Network policy: kube-dns
     matchLabels:
       name: kube-system
 - podSelector:
-    matchLabels:
-      k8s-app: kube-dns
+    matchExpressions:
+      - key: k8s-app
+        operator: In
+        values: ["kube-dns", "coredns"]
 ports:
 - protocol: TCP
   port: 53
 - protocol: UDP
   port: 53
+- protocol: TCP
+  port: 1053
+- protocol: UDP
+  port: 1053
 {{- end -}}
 
 {{/*

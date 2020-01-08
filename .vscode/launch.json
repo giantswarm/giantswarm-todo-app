@@ -11,7 +11,7 @@
             "mode": "debug",
             "program": "${workspaceFolder}/api-server/cmd/server/main.go",
             "env": {
-                "CLIENT_MGR_ADDR": "localhost:8090"
+                "TODO_URL": "localhost:8090"
             }
         },
         {
@@ -20,13 +20,20 @@
             "request": "launch",
             "mode": "debug",
             "program": "${workspaceFolder}/todo-manager/cmd/server/main.go",
-            "env": { }
+            "env": {
+                "MYSQL_HOST": "localhost",
+                "MYSQL_USER": "root",
+                "MYSQL_PASS": ""
+            }
         }
     ],
     "compounds": [
         {
             "name": "Debug - All",
-            "configurations": ["Debug - Apiserver", "Debug - Todomanager"]
+            "configurations": [
+                "Debug - Apiserver",
+                "Debug - Todomanager"
+            ]
         }
     ]
 }

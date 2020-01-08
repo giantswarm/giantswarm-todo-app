@@ -62,6 +62,7 @@ func (t *Router) ListTodos(w http.ResponseWriter, r *http.Request) {
 		render.Render(w, r, middleware.ErrRender(err))
 		return
 	}
+	var todoList []render.Renderer
 	// FIXME: need to return a list here!
 	for {
 		res, err := stream.Recv()
@@ -75,12 +76,13 @@ func (t *Router) ListTodos(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		todo, _ := FromGRPCTodo(res)
-		if err := render.Render(w, r, todo); err != nil {
-			render.Render(w, r, middleware.ErrRender(err))
-			return
-		}
+		todoList = append(todoList, todo)
 	}
 
+	if err := render.RenderList(w, r, todoList); err != nil {
+		render.Render(w, r, middleware.ErrRender(err))
+		return
+	}
 }
 
 // CreateTodo creates a new todo for a given user

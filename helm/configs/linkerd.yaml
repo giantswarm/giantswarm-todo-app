@@ -1,0 +1,5 @@
+Identity:
+  Issuer:
+    Scheme: "linkerd.io/cert-manager" 
+GrafanaUserRole: Admin
+Namespace: linkerd

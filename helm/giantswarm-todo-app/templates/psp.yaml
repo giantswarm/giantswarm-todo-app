@@ -10,7 +10,7 @@ spec:
   hostNetwork: false
   hostIPC: false
   hostPID: false
-  readOnlyRootFilesystem: true
+  readOnlyRootFilesystem: false
   allowedCapabilities:
     - NET_ADMIN
     - NET_RAW
@@ -40,4 +40,5 @@ spec:
   - secret
   - emptyDir
   - configMap
-
+  - projected
+  - downwardAPI
