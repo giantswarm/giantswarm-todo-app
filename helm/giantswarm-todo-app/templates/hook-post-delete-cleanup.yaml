@@ -31,7 +31,7 @@ metadata:
   name: namespace-janitor
   namespace: {{ .Release.Namespace }}
   annotations:
-    "helm.sh/hook": "pre-install"
+    "helm.sh/hook": "post-delete"
     "helm.sh/hook-weight": "-5"
     "helm.sh/hook-delete-policy": "hook-succeeded,hook-failed"
   labels:
@@ -43,7 +43,7 @@ metadata:
   name: namespace-janitor
   namespace: {{ .Release.Namespace }}
   annotations:
-    "helm.sh/hook": "pre-install"
+    "helm.sh/hook": "post-delete"
     "helm.sh/hook-weight": "-4"
     "helm.sh/hook-delete-policy": "hook-succeeded,hook-failed"
   labels:
@@ -64,7 +64,7 @@ metadata:
   name: namespace-janitor
   namespace: {{ .Release.Namespace }}
   annotations:
-    "helm.sh/hook": "pre-install"
+    "helm.sh/hook": "post-delete"
     "helm.sh/hook-delete-policy": "hook-succeeded,hook-failed"
   labels:
     app: namespace-janitor
