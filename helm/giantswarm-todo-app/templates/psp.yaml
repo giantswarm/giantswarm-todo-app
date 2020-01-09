@@ -2,6 +2,9 @@ apiVersion: extensions/v1beta1
 kind: PodSecurityPolicy
 metadata:
   name: {{ .Release.Name }}-todo-psp
+  annotations:
+    "helm.sh/hook": "pre-install"
+    "helm.sh/hook-weight": "-5"
   labels:
 {{- include "giantswarm-todo.generic.labels" . | indent 4 }}
 spec:

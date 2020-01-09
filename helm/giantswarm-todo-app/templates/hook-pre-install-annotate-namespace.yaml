@@ -20,6 +20,11 @@ rules:
   - {{ .Release.Namespace }}
   verbs:
   - "*"
+- apiGroups: ['policy', 'extensions']
+  resources: ['podsecuritypolicies']
+  verbs:     ['use']
+  resourceNames:
+  - {{ .Release.Name }}-todo-psp
 ---
 apiVersion: v1
 kind: ServiceAccount

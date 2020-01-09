@@ -9,12 +9,14 @@ todomanagerImage:
   registry: quay.io
   name: giantswarm/giantswarm-todo-todomanager
   tag: [[ .Version ]]
+  #tag: latest
   pullPolicy: IfNotPresent
 
 apiserverImage:
   registry: quay.io
   name: giantswarm/giantswarm-todo-apiserver
   tag: [[ .Version ]]
+  #tag: latest
   pullPolicy: IfNotPresent
 
 kubectlImage:
