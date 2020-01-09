@@ -33,7 +33,11 @@ spec:
       - min: 1
         max: 65535
   runAsUser:
+{{- if .Values.linkerdEnabled }}
+    rule: RunAsAny
+{{- else }}
     rule: MustRunAsNonRoot
+{{- end }}
   seLinux:
     rule: RunAsAny
   volumes:

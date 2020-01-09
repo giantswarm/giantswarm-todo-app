@@ -31,6 +31,7 @@ resources:
     cpu: 100m
     memory: 128Mi
 
+linkerdEnabled: true
 linkerdNamespace: linkerd
 
 apiserverServiceType: "ClusterIP"
@@ -38,6 +39,8 @@ todomanagerServiceType: "ClusterIP"
 
 mysql:
   mysqlDatabase: todo
+  image: "quay.io/giantswarm/mysql"
+  imageTag: "5.7.14-giantswarm"
 
 ingress:
   enabled: false
