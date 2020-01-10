@@ -11,5 +11,5 @@ name: giantswarm-todo-app
 sources:
 - https://github.com/giantswarm/blog-i-want-it-all
 - https://github.com/giantswarm/giantswarm-todo-app/
-version: [[ .Version ]]
-  #version: 0.0.1
+  #version: [[ .Version ]]
+version: 0.2.1
