@@ -9,14 +9,12 @@ todomanagerImage:
   registry: quay.io
   name: giantswarm/giantswarm-todo-todomanager
   tag: [[ .Version ]]
-  #tag: latest
   pullPolicy: IfNotPresent
 
 apiserverImage:
   registry: quay.io
   name: giantswarm/giantswarm-todo-apiserver
   tag: [[ .Version ]]
-  #tag: latest
   pullPolicy: IfNotPresent
 
 kubectlImage:
@@ -43,6 +41,10 @@ mysql:
   mysqlDatabase: todo
   image: "quay.io/giantswarm/mysql"
   imageTag: "5.7.14-giantswarm"
+  persistence:
+    enabled: false
+  securityContext:
+    enabled: true
 
 ingress:
   enabled: false

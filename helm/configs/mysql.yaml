@@ -1,5 +1,0 @@
-mysql:
-  persistence:
-    enabled: false
-  securityContext:
-    enabled: true
