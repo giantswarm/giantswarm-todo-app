@@ -12,7 +12,7 @@ jobs:
       - run: cat api-server/.version
       - run: cp api-server/.version todo-manager/
       - save_cache:
-          key: repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: repo-{{ .Environment.CIRCLE_SHA1 }}-{{ .BuildNum }}
           paths:
             - ~/giantswarm-todo
   build_apiserver:
@@ -21,7 +21,7 @@ jobs:
       ~/giantswarm-todo/api-server
     steps:
       - restore_cache:
-          key: repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: repo-{{ .Environment.CIRCLE_SHA1 }}-{{ .BuildNum }}
       - run: cat .version
       - run: IMG_VER=$(cat .version) make docker-build
       - run: echo -n "${QUAY_PASSWORD}" | docker login --username "${QUAY_USERNAME}" --password-stdin quay.io 
@@ -32,7 +32,7 @@ jobs:
       ~/giantswarm-todo/todo-manager
     steps:
       - restore_cache:
-          key: repo-{{ .Environment.CIRCLE_SHA1 }}
+          key: repo-{{ .Environment.CIRCLE_SHA1 }}-{{ .BuildNum }}
       - run: cat .version
       - run: IMG_VER=$(cat .version) make docker-build
       - run: echo -n "${QUAY_PASSWORD}" | docker login --username "${QUAY_USERNAME}" --password-stdin quay.io 
