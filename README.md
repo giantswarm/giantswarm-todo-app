@@ -9,6 +9,11 @@ There are no real requirements and you can install the application as-is.
 
 Still, if you want to use it with Loki and Linkerd2, please see instructions below.
 
+This application was tested with Loki and Linkerd2 coming from these charts:
+
+- <https://github.com/giantswarm/linkerd2-app>
+- <https://github.com/giantswarm/loki-stack-app>
+
 ## Installation
 
 ### Dependencies
