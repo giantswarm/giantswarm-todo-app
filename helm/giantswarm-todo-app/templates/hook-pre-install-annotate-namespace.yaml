@@ -1,3 +1,4 @@
+{{- if .Values.linkerdEnabled }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: Role
@@ -19,6 +20,11 @@ rules:
   - {{ .Release.Namespace }}
   verbs:
   - "*"
+- apiGroups: ['policy', 'extensions']
+  resources: ['podsecuritypolicies']
+  verbs:     ['use']
+  resourceNames:
+  - {{ .Release.Name }}-todo-psp
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -80,3 +86,4 @@ spec:
           kubectl annotate ns {{ .Release.Namespace }} linkerd.io/inject=enabled && sleep 1
       restartPolicy: Never
   backoffLimit: 6
+{{ end }}
