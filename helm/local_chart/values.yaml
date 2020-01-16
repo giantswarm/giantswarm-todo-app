@@ -1,0 +1,63 @@
+# Default values for giantswarm-todo.
+
+clusterDomain: cluster.local
+
+todomanagerReplicaCount: 3
+apiserverReplicaCount: 3
+
+todomanagerImage:
+  registry: quay.io
+  name: giantswarm/giantswarm-todo-todomanager
+  tag: latest
+  pullPolicy: Never
+
+apiserverImage:
+  registry: quay.io
+  name: giantswarm/giantswarm-todo-apiserver
+  tag: latest
+  pullPolicy: Never
+
+kubectlImage:
+  registry: quay.io
+  name: giantswarm/docker-kubectl
+  tag: 933ac043b7bec33104aac58b16849ea28bace26c
+  pullPolicy: IfNotPresent
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+linkerdEnabled: true
+linkerdNamespace: linkerd
+
+apiserverServiceType: "ClusterIP"
+todomanagerServiceType: "ClusterIP"
+
+mysql:
+  mysqlDatabase: todo
+  image: "quay.io/giantswarm/mysql"
+  imageTag: "5.7.14-giantswarm"
+  persistence:
+    enabled: false
+  securityContext:
+    enabled: true
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: todo.local
+      paths: []
+
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+
