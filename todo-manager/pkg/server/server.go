@@ -5,8 +5,9 @@ import (
 	"errors"
 	"fmt"
 
-	todomgrpb "github.com/giantswarm/blog-i-want-it-all/todo-manager/pkg/proto"
+	todomgrpb "github.com/giantswarm/giantswarm-todo-app/todo-manager/pkg/proto"
 	"github.com/jinzhu/gorm"
+	"go.opencensus.io/trace"
 
 	// initialize mysql gorm driver
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -22,9 +23,10 @@ type TodoManagerServer struct {
 
 // NewTodoManagerServer creates a new TodoManagerServer
 func NewTodoManagerServer(config *Config) *TodoManagerServer {
+	driverName := "mysql"
 	mysqlConnectString := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		config.MysqlUser, config.MysqlPass, config.MysqlHost, dbName)
-	db, err := gorm.Open("mysql", mysqlConnectString)
+	db, err := gorm.Open(driverName, mysqlConnectString)
 	if err != nil {
 		panic(fmt.Sprintf("Failed to connect database: %v", err))
 	}
@@ -45,7 +47,9 @@ func (t *TodoManagerServer) Stop() {
 // CreateTodo stores new todo in database
 func (t *TodoManagerServer) CreateTodo(ctx context.Context, todo *todomgrpb.Todo) (*todomgrpb.Todo, error) {
 	dbTodo := FromGrpc(todo)
+	_, span := trace.StartSpan(ctx, "db-create")
 	t.db.Create(dbTodo)
+	span.End()
 	if dbTodo.ID == 0 {
 		return nil, errors.New("Error inserting to database")
 	}
@@ -55,7 +59,9 @@ func (t *TodoManagerServer) CreateTodo(ctx context.Context, todo *todomgrpb.Todo
 // ListTodos lists all todos owned by the user sent in request
 func (t *TodoManagerServer) ListTodos(req *todomgrpb.ListTodosReq, srv todomgrpb.TodoManager_ListTodosServer) error {
 	var todos []TodoEntry
+	_, span := trace.StartSpan(srv.Context(), "db-list")
 	t.db.Where("owner = ?", req.Owner).Find(&todos)
+	span.End()
 	for _, t := range todos {
 		todo := t.ToGrpc()
 		srv.Send(todo)
@@ -66,7 +72,9 @@ func (t *TodoManagerServer) ListTodos(req *todomgrpb.ListTodosReq, srv todomgrpb
 // GetTodo returns todo with specified ID and owner, if it exists
 func (t *TodoManagerServer) GetTodo(ctx context.Context, grpcTodo *todomgrpb.TodoIdReq) (*todomgrpb.Todo, error) {
 	found := TodoEntry{}
+	_, span := trace.StartSpan(ctx, "db-get")
 	t.db.First(&found, grpcTodo.GetId())
+	span.End()
 	if found.ID == 0 || found.Owner != grpcTodo.GetOwner() {
 		return nil, errors.New("Todo not found")
 	}
@@ -76,14 +84,18 @@ func (t *TodoManagerServer) GetTodo(ctx context.Context, grpcTodo *todomgrpb.Tod
 // UpdateTodo updates a todo with a specified ID and owner, if it exists
 func (t *TodoManagerServer) UpdateTodo(ctx context.Context, grpcTodo *todomgrpb.Todo) (*todomgrpb.Todo, error) {
 	found := TodoEntry{}
+	_, span := trace.StartSpan(ctx, "db-update-get")
 	t.db.First(&found, grpcTodo.GetId())
+	span.End()
 	if found.ID == 0 || found.Owner != grpcTodo.GetOwner() {
 		return nil, errors.New("Todo not found")
 	}
 
 	found.Text = grpcTodo.Text
 	found.Done = grpcTodo.Done
+	_, span = trace.StartSpan(ctx, "db-update-save")
 	t.db.Save(&found)
+	span.End()
 	if found.ID == 0 {
 		return nil, errors.New("Error updating record in DB")
 	}
@@ -94,12 +106,16 @@ func (t *TodoManagerServer) UpdateTodo(ctx context.Context, grpcTodo *todomgrpb.
 // DeleteTodo deletes a todo with a specified ID and owner, if it exists
 func (t *TodoManagerServer) DeleteTodo(ctx context.Context, grpcTodo *todomgrpb.TodoIdReq) (*todomgrpb.DeleteTodoRes, error) {
 	found := TodoEntry{}
+	_, span := trace.StartSpan(ctx, "db-update-get")
 	t.db.First(&found, grpcTodo.GetId())
+	span.End()
 	if found.ID == 0 || found.Owner != grpcTodo.GetOwner() {
 		return nil, errors.New("Todo not found")
 	}
 
+	_, span = trace.StartSpan(ctx, "db-update-delete")
 	t.db.Delete(&found)
+	span.End()
 
 	return &todomgrpb.DeleteTodoRes{Success: true}, nil
 }

@@ -37,6 +37,8 @@ spec:
             initialDelaySeconds: 2
             periodSeconds: 5
           env:
+            - name: "OC_AGENT_HOST"
+              value: "oc-collector.tracing.svc.cluster.local:55678"
             - name: "MYSQL_HOST"
               value: "{{ .Release.Name }}-mysql.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}"
             - name: "MYSQL_USER"

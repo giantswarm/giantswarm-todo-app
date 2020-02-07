@@ -10,9 +10,12 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"github.com/piontec/go-chi-middleware-server/pkg/server/middleware"
+	"go.opencensus.io/plugin/ocgrpc"
+
+	// "go.opencensus.io/trace"
 	"google.golang.org/grpc"
 
-	todomgrpb "github.com/giantswarm/blog-i-want-it-all/api-server/pkg/todo/proto"
+	todomgrpb "github.com/giantswarm/giantswarm-todo-app/api-server/pkg/todo/proto"
 )
 
 // Username is a temporary value for all user name fields until we get proper authentication in place
@@ -25,9 +28,8 @@ type Router struct {
 
 // NewRouter returns new go-chi router with initialized gRPC client
 func NewRouter(todoManagerAddr string) *Router {
-	requestOpts := grpc.WithInsecure()
 	// Dial the server, returns a client connection
-	conn, err := grpc.Dial(todoManagerAddr, requestOpts)
+	conn, err := grpc.Dial(todoManagerAddr, grpc.WithInsecure(), grpc.WithStatsHandler(new(ocgrpc.ClientHandler)))
 	if err != nil {
 		log.Fatalf("Unable to establish client connection to %s: %v", todoManagerAddr, err)
 	}
@@ -63,7 +65,6 @@ func (t *Router) ListTodos(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var todoList []render.Renderer
-	// FIXME: need to return a list here!
 	for {
 		res, err := stream.Recv()
 		// If end of stream, break the loop
@@ -98,6 +99,7 @@ func (t *Router) CreateTodo(w http.ResponseWriter, r *http.Request) {
 		render.Render(w, r, middleware.ErrInvalidRequest(errors.New("Text can't be empty")))
 		return
 	}
+	// we don't have any real auth, let's pretend we always serve the user with ID 0
 	data.ID = "0"
 	// run request
 	newGrpcTodo, err := t.grpcClient.CreateTodo(r.Context(), data.ToGRPCTodo(Username))

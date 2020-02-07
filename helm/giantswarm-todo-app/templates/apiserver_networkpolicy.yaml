@@ -33,3 +33,5 @@ spec:
 {{ include "giantswarm-todo.netpol.kube-dns" . | indent 4 }}
   - to:
 {{ include "giantswarm-todo.netpol.linkerd" . | indent 4 }}
+  - to:
+{{ include "giantswarm-todo.netpol.tracing" . | indent 4 }}

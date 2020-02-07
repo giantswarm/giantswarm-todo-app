@@ -29,3 +29,20 @@ Network policy: linkerd
     matchLabels:
       linkerd.io/control-plane-ns: {{ .Values.linkerdNamespace }}
 {{- end -}}
+
+{{/*
+Network policy: tracing
+*/}}
+{{- define "giantswarm-todo.netpol.tracing" -}}
+- namespaceSelector:
+    matchLabels:
+      name: {{ .Values.tracingNamespace }}
+- podSelector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values: ["opencensus"]
+      - key: component
+        operator: In
+        values: ["oc-collector"]
+{{- end -}}
