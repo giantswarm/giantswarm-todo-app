@@ -1,7 +1,9 @@
 import pytest
-import smtplib
 
+
+def pytest_addoption(parser):
+    parser.addoption("--values-file", action="store")
 
 @pytest.fixture(scope="module")
-def smtp_connection():
-    return smtplib.SMTP("smtp.gmail.com", 587, timeout=5)
+def values_file_path(pytestconfig):
+    return pytestconfig.getoption("values-file")
