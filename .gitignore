@@ -1,2 +1,4 @@
 giantswarm-todo-app-*.tgz
 .vscode/settings.json
+test-results/**
+test/kind/__pycache__

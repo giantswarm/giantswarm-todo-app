@@ -9,6 +9,7 @@ verify_ssl = true
 pytest = "*"
 kubetest = "*"
 kubernetes = "*"
+pyyaml = "*"
 
 [requires]
 python_version = "3.7"
