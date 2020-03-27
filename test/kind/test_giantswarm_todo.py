@@ -41,11 +41,10 @@ def test_services(services: List[Service]):
 
 
 # By injecting fixtures, we can be sure that all deployments and the service are "Ready"
+@pytest.mark.flaky(reruns=3, reruns_delay=2)
 def test_get_todos(services: List[Service], deployments: List[Deployment]):
     # unfortunately, when services and deployments are ready, traffic forwarding doesn't yet
-    # work fo 100% :(
-    # FIXME: ugly, ugly hack, but I have 7 mins of hackathon left
-    time.sleep(5)
+    # work fo 100% :( That's why we need a retry.
     data, status, headers = services.get("apiserver").proxy_http_get("v1/todo")
     assert data == None
     assert status == 200
