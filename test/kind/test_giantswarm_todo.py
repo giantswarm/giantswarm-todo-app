@@ -1,3 +1,4 @@
+import time
 import pytest
 from typing import List
 from kubetest.client import TestClient
@@ -8,11 +9,13 @@ todo_timeout: int = 90
 
 
 @pytest.fixture(scope="function")
-def apiserver_service(kube: TestClient) -> Service:
-    service = kube.get_services(namespace="default").get("apiserver")
-    assert service is not None
-    service.wait_until_ready(timeout=todo_timeout)
-    return service
+def services(kube: TestClient) -> List[Service]:
+    services = kube.get_services(namespace="default")
+    for service_name in ["apiserver", "giantswarm-todo-app-mysql", "todomanager"]:
+        service = services.get(service_name)
+        assert service is not None
+        service.wait_until_ready(timeout=todo_timeout)
+    return services
 
 
 @pytest.fixture(scope="function")
@@ -20,8 +23,10 @@ def deployments(kube: TestClient) -> List[Deployment]:
     deployments = kube.get_deployments(namespace="default")
     for deploy_name in ["apiserver", "giantswarm-todo-app-mysql", "todomanager"]:
         deployment = deployments.get(deploy_name)
+        assert deployment is not None
         deployment.wait_until_ready(timeout=todo_timeout)
     return deployments
+
 
 def test_deployments(deployments: List[Deployment]):
     for deploy_name in ["apiserver", "giantswarm-todo-app-mysql", "todomanager"]:
@@ -29,13 +34,19 @@ def test_deployments(deployments: List[Deployment]):
         assert deployment.is_ready()
 
 
-def test_apiserver_service(apiserver_service: Service):
-    assert apiserver_service.is_ready()
+def test_services(services: List[Service]):
+    for service_name in ["apiserver", "giantswarm-todo-app-mysql", "todomanager"]:
+        service = services.get(service_name)
+        assert service.is_ready()
 
 
 # By injecting fixtures, we can be sure that all deployments and the service are "Ready"
-def test_get_todos(apiserver_service: Service, deployments: List[Deployment]):
-    data, status, headers = apiserver_service.proxy_http_get("v1/todo")
+def test_get_todos(services: List[Service], deployments: List[Deployment]):
+    # unfortunately, when services and deployments are ready, traffic forwarding doesn't yet
+    # work fo 100% :(
+    # FIXME: ugly, ugly hack, but I have 7 mins of hackathon left
+    time.sleep(5)
+    data, status, headers = services.get("apiserver").proxy_http_get("v1/todo")
     assert data == None
     assert status == 200
     assert 'Content-Type' in headers
