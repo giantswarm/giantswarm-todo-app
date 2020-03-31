@@ -51,6 +51,8 @@ jobs:
       - run: tar zxf /tmp/helm.tar.gz -C /tmp && mv /tmp/linux-amd64/helm /tmp/helm
       - run: curl -Lo /tmp/kind-app-testing.sh -q https://github.com/giantswarm/kind-app-testing/raw/master/kind-app-testing.sh
       - run: chmod +x /tmp/kind-app-testing.sh
+      - run: curl -Lo /tmp/kubectl https://storage.googleapis.com/kubernetes-release/release/v1.18.0/bin/linux/amd64/kubectl
+      - run: chmod +x /tmp/kubectl
       - run: pip install pipenv
       - run: pwd
       - run: ls -la
