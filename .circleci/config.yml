@@ -47,9 +47,9 @@ jobs:
       - checkout
       - run: pwd
       - run: ls -la
-      - run: apt-get install python3 python3-pip
+      - run: sudo apt-get install python3 python3-pip
       - run: python3 --version
-      - run: pip3 install pipenv
+      - run: sudo pip3 install pipenv
         #- run: curl -Lo /tmp/kind "https://github.com/kubernetes-sigs/kind/releases/download/v0.7.0/kind-$(uname)-amd64"
         #- run: chmod +x /tmp/kind
         #- run: curl -Lo /tmp/helm.tar.gz https://get.helm.sh/helm-v2.16.5-linux-amd64.tar.gz
