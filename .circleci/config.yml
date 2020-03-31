@@ -47,7 +47,7 @@ jobs:
       - checkout
       - run: pwd
       - run: ls -la
-      - run: pyenv versions
+      - run: pyenv global 3.5.0
       - run: python --version
         #- run: curl -Lo /tmp/kind "https://github.com/kubernetes-sigs/kind/releases/download/v0.7.0/kind-$(uname)-amd64"
         #- run: chmod +x /tmp/kind
