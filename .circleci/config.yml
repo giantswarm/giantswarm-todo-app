@@ -42,13 +42,15 @@ jobs:
     working_directory:
       ~/giantswarm-todo/todo-manager
     steps:
-      - restore_cache:
-          key: repo-{{ .Environment.CIRCLE_SHA1 }}-<< pipeline.git.tag >>
+      #- restore_cache:
+      #    key: repo-{{ .Environment.CIRCLE_SHA1 }}-<< pipeline.git.tag >>
+      - checkout
       - run: wget -O /tmp/kind-app-testing.sh -q https://github.com/giantswarm/kind-app-testing/raw/master/kind-app-testing.sh
       - run: chmod +x /tmp/kind-app-testing.sh
-      - run: /tmp/kind-app-testing.sh -c giantswarm-todo-app
       - run: pwd
       - run: ls -la
+      - run: ls -la /tmp
+      - run: /tmp/kind-app-testing.sh -c giantswarm-todo-app
       - store_test_results:
           path: test-results
       - store_artifacts:
