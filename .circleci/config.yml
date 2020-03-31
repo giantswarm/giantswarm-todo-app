@@ -49,7 +49,7 @@ jobs:
       - run: pwd
       - run: ls -la
       - run: pyenv versions
-      - run: pyenv global 3.5.2
+      - run: pyenv global 3.7.0
       - run: python --version
       - run: pip install pipenv
       - run: curl -Lo /tmp/kind "https://github.com/kubernetes-sigs/kind/releases/download/v0.7.0/kind-$(uname)-amd64"
