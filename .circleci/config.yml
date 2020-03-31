@@ -47,6 +47,8 @@ jobs:
       - run: wget -O /tmp/kind-app-testing.sh -q https://github.com/giantswarm/kind-app-testing/raw/master/kind-app-testing.sh
       - run: chmod +x /tmp/kind-app-testing.sh
       - run: /tmp/kind-app-testing.sh -c giantswarm-todo-app
+      - run: pwd
+      - run: ls -la
       - store_test_results:
           path: test-results
       - store_artifacts:
@@ -61,33 +63,33 @@ workflows:
           filters:
             tags:
               only: /^v.*/
-      - build_apiserver:
-          requires:
-            - checkout_code
-          filters:
-            tags:
-              only: /^v.*/
-      - build_todomanager:
-          requires:
-            - checkout_code
-          filters:
-            tags:
-              only: /^v.*/
+              #      - build_apiserver:
+              #          requires:
+              #            - checkout_code
+              #          filters:
+              #            tags:
+              #              only: /^v.*/
+              #      - build_todomanager:
+              #          requires:
+              #            - checkout_code
+              #          filters:
+              #            tags:
+              #              only: /^v.*/
       - run_kat_tests:
-          requires:
-            - build_apiserver
-            - build_todomanager
+        #          requires:
+        #            - build_apiserver
+        #            - build_todomanager
           filters:
             tags:
               only: /^v.*/
-      - architect/push-to-app-catalog:
-          name: "package and push giantswarm-todo-app chart"
-          requires:
-            - run_kat_tests
-          app_catalog: "giantswarm-playground-catalog"
-          app_catalog_test: "giantswarm-playground-test-catalog"
-          chart: "giantswarm-todo-app"
-          # Trigger job on git tag.
-          filters:
-            tags:
-              only: /^v.*/
+              #      - architect/push-to-app-catalog:
+              #          name: "package and push giantswarm-todo-app chart"
+              #          requires:
+              #            - run_kat_tests
+              #          app_catalog: "giantswarm-playground-catalog"
+              #          app_catalog_test: "giantswarm-playground-test-catalog"
+              #          chart: "giantswarm-todo-app"
+              #          # Trigger job on git tag.
+              #          filters:
+              #            tags:
+              #              only: /^v.*/
