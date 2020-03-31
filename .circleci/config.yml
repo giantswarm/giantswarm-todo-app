@@ -81,14 +81,3 @@ workflows:
           filters:
             tags:
               only: /^v.*/
-      - architect/push-to-app-catalog:
-          name: "package and push giantswarm-todo-app chart"
-          requires:
-            - run_tests
-          app_catalog: "giantswarm-playground-catalog"
-          app_catalog_test: "giantswarm-playground-test-catalog"
-          chart: "giantswarm-todo-app"
-          # Trigger job on git tag.
-          filters:
-            tags:
-              only: /^v.*/
