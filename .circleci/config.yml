@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@0.4.3
+  architect: giantswarm/architect@0.8.5
 
 jobs:
   checkout_code:
@@ -37,6 +37,33 @@ jobs:
       - run: IMG_VER=$(cat .version) make docker-build
       - run: echo -n "${QUAY_PASSWORD}" | docker login --username "${QUAY_USERNAME}" --password-stdin quay.io 
       - run: IMG_VER=$(cat .version) make docker-push
+  run_kat_tests:
+    machine:
+      image: ubuntu-1604:201903-01
+    working_directory:
+      ~/giantswarm-todo
+    steps:
+      - restore_cache:
+          key: repo-{{ .Environment.CIRCLE_SHA1 }}-<< pipeline.git.tag >>
+      - run: pyenv versions
+      - run: pyenv global 3.7.0
+      - run: python --version
+      - run: pip install pipenv
+      - run: curl -Lo /tmp/kind "https://github.com/kubernetes-sigs/kind/releases/download/v0.7.0/kind-$(uname)-amd64"
+      - run: chmod +x /tmp/kind
+      - run: curl -Lo /tmp/helm.tar.gz https://get.helm.sh/helm-v2.16.5-linux-amd64.tar.gz
+      - run: tar zxf /tmp/helm.tar.gz -C /tmp && mv /tmp/linux-amd64/helm /tmp/helm
+      - run: /tmp/helm init -c
+      - run: curl -Lo /tmp/kind-app-testing.sh -q https://github.com/giantswarm/kind-app-testing/raw/master/kind-app-testing.sh
+      - run: chmod +x /tmp/kind-app-testing.sh
+      - run: curl -Lo /tmp/kubectl https://storage.googleapis.com/kubernetes-release/release/v1.18.0/bin/linux/amd64/kubectl
+      - run: chmod +x /tmp/kubectl
+      - run: PATH="/tmp:$PATH" kind-app-testing.sh -c giantswarm-todo-app
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: test-results    
+
 
 workflows:
   version: 2
@@ -58,11 +85,17 @@ workflows:
           filters:
             tags:
               only: /^v.*/
-      - architect/push-to-app-catalog:
-          name: "package and push giantswarm-todo-app chart"
+      - run_kat_tests:
           requires:
             - build_apiserver
             - build_todomanager
+          filters:
+            tags:
+              only: /^v.*/
+      - architect/push-to-app-catalog:
+          name: "package and push giantswarm-todo-app chart"
+          requires:
+            - run_kat_tests
           app_catalog: "giantswarm-playground-catalog"
           app_catalog_test: "giantswarm-playground-test-catalog"
           chart: "giantswarm-todo-app"
