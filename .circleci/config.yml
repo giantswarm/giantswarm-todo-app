@@ -76,7 +76,8 @@ workflows:
               #            tags:
               #              only: /^v.*/
       - run_kat_tests:
-        #          requires:
+          requires:
+            - checkout_code
         #            - build_apiserver
         #            - build_todomanager
           filters:
