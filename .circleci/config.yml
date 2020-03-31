@@ -51,6 +51,7 @@ jobs:
       - run: tar zxf /tmp/helm.tar.gz -C /tmp && mv /tmp/linux-amd64/helm /tmp/helm
       - run: curl -Lo /tmp/kind-app-testing.sh -q https://github.com/giantswarm/kind-app-testing/raw/master/kind-app-testing.sh
       - run: chmod +x /tmp/kind-app-testing.sh
+      - run: pip install pipenv
       - run: pwd
       - run: ls -la
       - run: ls -la /tmp
