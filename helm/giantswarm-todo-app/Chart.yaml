@@ -1,6 +1,6 @@
 apiVersion: v1
-appVersion: 0.2.6-dc9486fe08ca95b10618f84ea7b07560bc825948
-version: 0.2.6-dc9486fe08ca95b10618f84ea7b07560bc825948
+appVersion: [[ .Version ]]
+version: [[ .Version ]]
 description: 'A sample microservice TODO management application.'
 home: https://giantswarm.io
 icon: https://raw.githubusercontent.com/giantswarm/giantswarm-todo-app/master/img/icon-todo.png
