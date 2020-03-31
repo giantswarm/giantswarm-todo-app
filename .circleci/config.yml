@@ -37,7 +37,7 @@ jobs:
       - run: IMG_VER=$(cat .version) make docker-build
       - run: echo -n "${QUAY_PASSWORD}" | docker login --username "${QUAY_USERNAME}" --password-stdin quay.io 
       - run: IMG_VER=$(cat .version) make docker-push
-  run_tests:
+  run_kat_tests:
     machine: true
     working_directory:
       ~/giantswarm-todo/todo-manager
@@ -46,7 +46,7 @@ jobs:
           key: repo-{{ .Environment.CIRCLE_SHA1 }}-<< pipeline.git.tag >>
       - run: wget -q https://github.com/giantswarm/kind-app-testing/raw/master/kind-app-testing.sh -o /tmp/kind-app-testing.sh
       - run: chmod +x /tmp/kind-app-testing.sh
-      - run: tmp/kind-app-testing.sh -c giantswarm-todo-app
+      - run: /tmp/kind-app-testing.sh -c giantswarm-todo-app
       - store_test_results:
           path: test-results
       - store_artifacts:
@@ -73,11 +73,21 @@ workflows:
           filters:
             tags:
               only: /^v.*/
-      - run_tests:
-          name: "run kind-app-testing"
+      - run_kat_tests:
           requires:
             - build_apiserver
             - build_todomanager
+          filters:
+            tags:
+              only: /^v.*/
+      - architect/push-to-app-catalog:
+          name: "package and push giantswarm-todo-app chart"
+          requires:
+            - run_kat_tests
+          app_catalog: "giantswarm-playground-catalog"
+          app_catalog_test: "giantswarm-playground-test-catalog"
+          chart: "giantswarm-todo-app"
+          # Trigger job on git tag.
           filters:
             tags:
               only: /^v.*/
