@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@0.4.3
+  architect: giantswarm/architect@0.8.5
 
 jobs:
   checkout_code:
@@ -37,6 +37,21 @@ jobs:
       - run: IMG_VER=$(cat .version) make docker-build
       - run: echo -n "${QUAY_PASSWORD}" | docker login --username "${QUAY_USERNAME}" --password-stdin quay.io 
       - run: IMG_VER=$(cat .version) make docker-push
+  run_tests:
+    machine: true
+    working_directory:
+      ~/giantswarm-todo/todo-manager
+    steps:
+      - restore_cache:
+          key: repo-{{ .Environment.CIRCLE_SHA1 }}-<< pipeline.git.tag >>
+      - run: wget -q https://github.com/giantswarm/kind-app-testing/raw/master/kind-app-testing.sh -o /usr/local/bin/kind-app-testing.sh
+      - run: chmod +x /usr/local/bin/kind-app-testing.sh
+      - run: kind-app-testing.sh -c giantswarm-todo-app
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: test-results    
+
 
 workflows:
   version: 2
@@ -58,11 +73,15 @@ workflows:
           filters:
             tags:
               only: /^v.*/
-      - architect/push-to-app-catalog:
-          name: "package and push giantswarm-todo-app chart"
+      - run_tests:
+          name: "run kind-app-testing"
           requires:
             - build_apiserver
             - build_todomanager
+      - architect/push-to-app-catalog:
+          name: "package and push giantswarm-todo-app chart"
+          requires:
+            - run_tests
           app_catalog: "giantswarm-playground-catalog"
           app_catalog_test: "giantswarm-playground-test-catalog"
           chart: "giantswarm-todo-app"
