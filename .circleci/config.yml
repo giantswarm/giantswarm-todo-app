@@ -44,7 +44,7 @@ jobs:
     steps:
       - restore_cache:
           key: repo-{{ .Environment.CIRCLE_SHA1 }}-<< pipeline.git.tag >>
-      - run: wget -q https://github.com/giantswarm/kind-app-testing/raw/master/kind-app-testing.sh -o /tmp/kind-app-testing.sh
+      - run: wget -O /tmp/kind-app-testing.sh -q https://github.com/giantswarm/kind-app-testing/raw/master/kind-app-testing.sh
       - run: chmod +x /tmp/kind-app-testing.sh
       - run: /tmp/kind-app-testing.sh -c giantswarm-todo-app
       - store_test_results:
