@@ -41,7 +41,7 @@ def test_services(services: List[Service]):
 
 
 # By injecting fixtures, we can be sure that all deployments and the service are "Ready"
-@pytest.mark.flaky(reruns=3, reruns_delay=2)
+@pytest.mark.flaky(reruns=5, reruns_delay=2)
 def test_get_todos(services: List[Service], deployments: List[Deployment]):
     # unfortunately, when services and deployments are ready, traffic forwarding doesn't yet
     # work fo 100% :( That's why we need a retry.
