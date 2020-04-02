@@ -47,7 +47,7 @@ jobs:
       - restore_cache:
           key: repo-{{ .Environment.CIRCLE_SHA1 }}-<< pipeline.git.tag >>
       - restore_cache:
-          key: python-cache-{{ checksum "test/kind/Pipfile.lock" }}
+          key: v1-python-cache-{{ checksum "test/kind/Pipfile.lock" }}
       - run: curl -Lo /tmp/kind-app-testing.sh -q https://github.com/giantswarm/kind-app-testing/raw/master/kind-app-testing.sh
       - run: chmod +x /tmp/kind-app-testing.sh
       - run: mkdir /tmp/bin || true
@@ -60,18 +60,20 @@ jobs:
           key: bin-{{ checksum "/tmp/kind-app-testing.sh" }}
           paths:
             - /tmp/bin
-      - restore_cache:
-          key: docker-{{ checksum "/tmp/kind-app-testing.sh" }}
+#      - restore_cache:
+#          key: docker-{{ checksum "/tmp/kind-app-testing.sh" }}
       - run: /tmp/bin/helm init -c
       - run: PATH="/tmp/bin:$PATH" /tmp/kind-app-testing.sh -c giantswarm-todo-app
       - save_cache:
-          key: python-cache-{{ checksum "test/kind/Pipfile.lock" }}
+          key: v1-python-cache-{{ checksum "test/kind/Pipfile.lock" }}
           paths:
-            - /tmp/kat
-      - save_cache:
-          key: docker-{{ checksum "/tmp/kind-app-testing.sh" }}
-          paths:
-            - /var/lib/docker
+            - /tmp/kat/.local
+            - /tmp/kat/.cache
+# doesn't work - probably permissions
+#      - save_cache:
+#          key: docker-{{ checksum "/tmp/kind-app-testing.sh" }}
+#          paths:
+#            - /var/lib/docker
       - store_test_results:
           path: test-results
       - store_artifacts:
