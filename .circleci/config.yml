@@ -52,7 +52,7 @@ jobs:
       - run: chmod +x /tmp/kind-app-testing.sh
       - run: mkdir /tmp/bin || true
       - restore_cache:
-          key: bin-{{ checksum "/kind-app-testing.sh" }}
+          key: bin-{{ checksum "/tmp/kind-app-testing.sh" }}
       - run: curl -Lo /tmp/bin/kind "https://github.com/kubernetes-sigs/kind/releases/download/v0.7.0/kind-$(uname)-amd64 && chmod +x /tmp/bin/kind"
       - run: curl -Lo /tmp/bin/helm.tar.gz https://get.helm.sh/helm-v2.16.5-linux-amd64.tar.gz && tar zxf /tmp/bin/helm.tar.gz -C /tmp && mv /tmp/bin/linux-amd64/helm /tmp/helm
       - run: curl -Lo /tmp/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v1.18.0/bin/linux/amd64/kubectl && chmod +x /tmp/bin/kubectl
