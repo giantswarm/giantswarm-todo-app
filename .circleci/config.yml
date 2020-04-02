@@ -60,13 +60,18 @@ jobs:
           key: bin-{{ checksum "/tmp/kind-app-testing.sh" }}
           paths:
             - /tmp/bin
-            - /var/lib/docker
+      - restore_cache:
+          key: docker-{{ checksum "/tmp/kind-app-testing.sh" }}
       - run: /tmp/bin/helm init -c
       - run: PATH="/tmp/bin:$PATH" /tmp/kind-app-testing.sh -c giantswarm-todo-app
       - save_cache:
           key: kind-app-testing-python-cache
           paths:
             - /tmp/kat
+      - save_cache:
+          key: docker-{{ checksum "/tmp/kind-app-testing.sh" }}
+          paths:
+            - /var/lib/docker
       - store_test_results:
           path: test-results
       - store_artifacts:
