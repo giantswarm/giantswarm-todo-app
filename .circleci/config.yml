@@ -47,7 +47,7 @@ jobs:
       - restore_cache:
           key: repo-{{ .Environment.CIRCLE_SHA1 }}-<< pipeline.git.tag >>
       - restore_cache:
-          key: kind-app-testing-python-cache
+          key: python-cache-{{ checksum "test/kind/Pipfile.lock" }}
       - run: curl -Lo /tmp/kind-app-testing.sh -q https://github.com/giantswarm/kind-app-testing/raw/master/kind-app-testing.sh
       - run: chmod +x /tmp/kind-app-testing.sh
       - run: mkdir /tmp/bin || true
@@ -65,7 +65,7 @@ jobs:
       - run: /tmp/bin/helm init -c
       - run: PATH="/tmp/bin:$PATH" /tmp/kind-app-testing.sh -c giantswarm-todo-app
       - save_cache:
-          key: kind-app-testing-python-cache
+          key: python-cache-{{ checksum "test/kind/Pipfile.lock" }}
           paths:
             - /tmp/kat
       - save_cache:
