@@ -61,7 +61,7 @@ jobs:
           paths:
             - /tmp/bin
       - run: /tmp/bin/helm init -c
-      - run: PATH="/tmp/bin:$PATH" /kind-app-testing.sh -c giantswarm-todo-app
+      - run: PATH="/tmp/bin:$PATH" /tmp/kind-app-testing.sh -c giantswarm-todo-app
       - save_cache:
           key: kind-app-testing-python-cache
           paths:
