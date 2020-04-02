@@ -60,6 +60,7 @@ jobs:
           key: bin-{{ checksum "/tmp/kind-app-testing.sh" }}
           paths:
             - /tmp/bin
+            - /var/lib/docker
       - run: /tmp/bin/helm init -c
       - run: PATH="/tmp/bin:$PATH" /tmp/kind-app-testing.sh -c giantswarm-todo-app
       - save_cache:
