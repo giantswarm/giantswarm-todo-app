@@ -58,7 +58,7 @@ workflows:
           filters:
             tags:
               only: /^v.*/
-      - architect/run_kat_tests:
+      - architect/run-kat-tests:
           name: "run kat tests"
           chart: "giantswarm-todo-app"
           requires:
