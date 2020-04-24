@@ -29,7 +29,7 @@ spec:
             - name: "TODO_URL"
               value: "todomanager:8090"
             - name: "OC_AGENT_HOST"
-              value: "oc-collector.tracing.svc.cluster.local:55678"
+              value: "{{ .Values.opencensusCollectorServiceName }}.{{ .Values.tracingNamespace }}.svc.cluster.local:55678"
           ports:
             - name: rest
               containerPort: 8080
