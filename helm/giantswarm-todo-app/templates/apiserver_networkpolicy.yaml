@@ -19,8 +19,10 @@ spec:
     ports:
     - protocol: TCP
       port: 8080
+{{- if .Values.linkerdEnabled }}
   - from:
 {{ include "giantswarm-todo.netpol.linkerd" . | indent 4 }}
+{{- end }}
   egress:
   - to:
     - podSelector:
@@ -31,7 +33,11 @@ spec:
       port: 8090
   - to:
 {{ include "giantswarm-todo.netpol.kube-dns" . | indent 4 }}
+{{- if .Values.linkerdEnabled }}
   - to:
 {{ include "giantswarm-todo.netpol.linkerd" . | indent 4 }}
+{{- end }}
+{{- if .Values.tracingEnabled }}
   - to:
 {{ include "giantswarm-todo.netpol.tracing" . | indent 4 }}
+{{- end }}

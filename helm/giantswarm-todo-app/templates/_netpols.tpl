@@ -39,10 +39,7 @@ Network policy: tracing
       name: {{ .Values.tracingNamespace }}
 - podSelector:
     matchExpressions:
-      - key: app
+      - key: app.kubernetes.io/component
         operator: In
-        values: ["opencensus"]
-      - key: component
-        operator: In
-        values: ["oc-collector"]
+        values: ["{{ .Values.opencensusCollectorComponentLabelValue }}"]
 {{- end -}}

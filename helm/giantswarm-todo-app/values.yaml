@@ -37,6 +37,7 @@ linkerdNamespace: linkerd
 tracingEnabled: true
 tracingNamespace: tracing
 opencensusCollectorServiceName: opencensus-collector-opencensus-collector-app
+opencensusCollectorComponentLabelValue: oc-collector
 
 apiserverServiceType: "ClusterIP"
 todomanagerServiceType: "ClusterIP"

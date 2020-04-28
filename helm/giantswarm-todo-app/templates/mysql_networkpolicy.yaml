@@ -20,10 +20,14 @@ spec:
     ports:
     - protocol: TCP
       port: 3306
+{{- if .Values.linkerdEnabled }}
   - from:
 {{ include "giantswarm-todo.netpol.linkerd" . | indent 4 }}
+{{- end }}
   egress:
   - to:
 {{ include "giantswarm-todo.netpol.kube-dns" . | indent 4 }}
+{{- if .Values.linkerdEnabled }}
   - to:
 {{ include "giantswarm-todo.netpol.linkerd" . | indent 4 }}
+{{- end }}
