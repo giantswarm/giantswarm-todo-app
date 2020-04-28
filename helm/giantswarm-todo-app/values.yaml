@@ -34,6 +34,7 @@ resources:
 linkerdEnabled: true
 linkerdNamespace: linkerd
 
+tracingEnabled: true
 tracingNamespace: tracing
 opencensusCollectorServiceName: opencensus-collector-opencensus-collector-app
 
@@ -50,15 +51,9 @@ mysql:
     enabled: true
 
 ingress:
-  enabled: false
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
   hosts:
     - host: todo.local
-      paths: []
-
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+      paths: ["/"]
