@@ -131,11 +131,10 @@ spec:
         - -x
         - -c
         - >-
-          kubectl annotate ns {{ .Release.Namespace }} linkerd.io/inject=enabled;
+          kubectl annotate --overwrite ns {{ .Release.Namespace }} linkerd.io/inject=enabled;
 {{- if .Values.tracingEnabled }}
-          kubectl annotate ns {{ .Release.Namespace }} "config.linkerd.io/trace-collector={{ .Values.opencensusCollectorServiceName }}.{{ .Values.tracingNamespace }}.svc.cluster.local:55678";
+          kubectl annotate --overwrite ns {{ .Release.Namespace }} "config.linkerd.io/trace-collector={{ .Values.opencensusCollectorServiceName }}.{{ .Values.tracingNamespace }}.svc.cluster.local:55678";
 {{- end }}
-          sleep 1;
       restartPolicy: Never
   backoffLimit: 6
 {{ end }}
