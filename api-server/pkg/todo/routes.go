@@ -43,6 +43,7 @@ func NewRouter(todoManagerAddr string) *Router {
 // GetRouter returns configuredsub-router for Todo resources
 func (t *Router) GetRouter() chi.Router {
 	r := chi.NewRouter()
+
 	r.Get("/", t.ListTodos)
 	r.Post("/", t.CreateTodo) // POST /
 

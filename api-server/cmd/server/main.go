@@ -11,7 +11,9 @@ import (
 	"github.com/piontec/go-chi-middleware-server/pkg/server"
 	"github.com/sirupsen/logrus"
 	"go.opencensus.io/plugin/ochttp"
+	"go.opencensus.io/plugin/ochttp/propagation/b3"
 	"go.opencensus.io/trace"
+	"go.opencensus.io/zpages"
 
 	"github.com/giantswarm/giantswarm-todo-app/api-server/pkg/todo"
 )
@@ -36,19 +38,32 @@ func initTracing(config *todo.Config) {
 	if err != nil {
 		log.Fatalf("Failed to create ocagent-exporter: %v", err)
 	}
-	trace.RegisterExporter(oce)
 	trace.ApplyConfig(trace.Config{DefaultSampler: trace.AlwaysSample()})
+	trace.RegisterExporter(oce)
 }
 
 func main() {
 	config := todo.NewConfig()
 	initTracing(config)
 
+	go func() {
+		mux := http.NewServeMux()
+		zpages.Handle(mux, "/debug")
+		log.Fatal(http.ListenAndServe(":8081", mux))
+	}()
+
 	server := server.NewChiServer(func(r *chi.Mux) {
 		r.Use(func(handler http.Handler) http.Handler {
 			return &ochttp.Handler{
 				Handler:          handler,
-				IsPublicEndpoint: true,
+				IsPublicEndpoint: false,
+				Propagation:      &b3.HTTPFormat{},
+				IsHealthEndpoint: func(r *http.Request) bool {
+					if r.URL.Path == "/ping" {
+						return true
+					}
+					return false
+				},
 			}
 		})
 		r.Route("/v1", func(r chi.Router) {
