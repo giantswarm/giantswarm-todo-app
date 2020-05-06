@@ -9,6 +9,7 @@ import (
 	"contrib.go.opencensus.io/exporter/ocagent"
 	"github.com/go-chi/chi"
 	"github.com/piontec/go-chi-middleware-server/pkg/server"
+	"github.com/piontec/go-chi-middleware-server/pkg/server/middleware"
 	"github.com/sirupsen/logrus"
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/plugin/ochttp/propagation/b3"
@@ -75,6 +76,12 @@ func main() {
 		DisableOIDCMiddleware: true,
 		LoggerFields: logrus.Fields{
 			"ver": version,
+		},
+		LoggerFieldFuncs: middleware.LogrusFieldFuncs{
+			"url": func(r *http.Request) string {
+				trace := trace.FromContext(r.Context())
+				return trace.String()
+			},
 		},
 	})
 	printVersion(server.GetLogger())
