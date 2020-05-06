@@ -78,9 +78,9 @@ func main() {
 			"ver": version,
 		},
 		LoggerFieldFuncs: middleware.LogrusFieldFuncs{
-			"url": func(r *http.Request) string {
-				trace := trace.FromContext(r.Context())
-				return trace.String()
+			"traceID": func(r *http.Request) string {
+				span := trace.FromContext(r.Context())
+				return span.SpanContext().TraceID.String()
 			},
 		},
 	})
