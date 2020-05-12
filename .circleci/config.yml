@@ -94,7 +94,7 @@ workflows:
       - architect/push-to-app-catalog:
           name: "package and push giantswarm-todo-app chart"
           requires:
-            - "run kat tests"
+            - "run_kat_tests"
           app_catalog: "giantswarm-playground-catalog"
           app_catalog_test: "giantswarm-playground-test-catalog"
           chart: "giantswarm-todo-app"
