@@ -84,7 +84,7 @@ workflows:
           filters:
             tags:
               only: /^v.*/
-      - run-kat-tests:
+      - run_kat_tests:
           requires:
             - build_apiserver
             - build_todomanager
