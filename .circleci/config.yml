@@ -96,9 +96,6 @@ workflows:
           requires:
             - build_apiserver
             - build_todomanager
-          filters:
-            tags:
-              only: /^v.*/
       - architect/push-to-app-catalog:
           name: "package and push giantswarm-todo-app chart"
           requires:
