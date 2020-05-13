@@ -69,7 +69,7 @@ jobs:
           path: test-results
       - run:
           name: Cleanup resources
-          command: PATH="/tmp:$PATH" kind-app-testing.sh -a ${GS_API_KEY}
+          command: PATH="/tmp:$PATH" kind-app-testing.sh --force-cleanup -a ${GS_API_KEY}
           when: on_fail
 
 workflows:
