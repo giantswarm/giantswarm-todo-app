@@ -67,6 +67,10 @@ jobs:
           path: test-results
       - store_artifacts:
           path: test-results
+      - run:
+          name: Cleanup resources
+          command: PATH="/tmp:$PATH" kind-app-testing.sh -a ${GS_API_KEY}
+          when: on_fail
 
 workflows:
   version: 2
