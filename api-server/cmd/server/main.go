@@ -9,7 +9,6 @@ import (
 	"contrib.go.opencensus.io/exporter/ocagent"
 	"github.com/go-chi/chi"
 	"github.com/piontec/go-chi-middleware-server/pkg/server"
-	"github.com/piontec/go-chi-middleware-server/pkg/server/middleware"
 	"github.com/sirupsen/logrus"
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/plugin/ochttp/propagation/b3"
@@ -41,17 +40,17 @@ func initTracing(config *todo.Config) {
 	}
 	trace.ApplyConfig(trace.Config{DefaultSampler: trace.AlwaysSample()})
 	trace.RegisterExporter(oce)
-}
-
-func main() {
-	config := todo.NewConfig()
-	initTracing(config)
 
 	go func() {
 		mux := http.NewServeMux()
 		zpages.Handle(mux, "/debug")
 		log.Fatal(http.ListenAndServe(":8081", mux))
 	}()
+}
+
+func main() {
+	config := todo.NewConfig()
+	initTracing(config)
 
 	server := server.NewChiServer(func(r *chi.Mux) {
 		r.Use(func(handler http.Handler) http.Handler {
@@ -76,12 +75,6 @@ func main() {
 		DisableOIDCMiddleware: true,
 		LoggerFields: logrus.Fields{
 			"ver": version,
-		},
-		LoggerFieldFuncs: middleware.LogrusFieldFuncs{
-			"traceID": func(r *http.Request) string {
-				span := trace.FromContext(r.Context())
-				return span.SpanContext().TraceID.String()
-			},
 		},
 	})
 	printVersion(server.GetLogger())

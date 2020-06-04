@@ -34,6 +34,9 @@ spec:
             - name: rest
               containerPort: 8080
               protocol: TCP
+            - name: zpages
+              containerPort: 8081
+              protocol: TCP
           readinessProbe:
             httpGet:
               path: /ping

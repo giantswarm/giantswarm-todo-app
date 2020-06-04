@@ -9,13 +9,13 @@ todomanagerImage:
   registry: quay.io
   name: giantswarm/giantswarm-todo-todomanager
   tag: latest
-  pullPolicy: Never
+  pullPolicy: IfNotPresent
 
 apiserverImage:
   registry: quay.io
   name: giantswarm/giantswarm-todo-apiserver
   tag: latest
-  pullPolicy: Never
+  pullPolicy: IfNotPresent
 
 kubectlImage:
   registry: quay.io
@@ -34,7 +34,10 @@ resources:
 linkerdEnabled: true
 linkerdNamespace: linkerd
 
+tracingEnabled: true
 tracingNamespace: tracing
+opencensusCollectorServiceName: opencensus-collector-opencensus-collector-app
+opencensusCollectorComponentLabelValue: oc-collector
 
 apiserverServiceType: "ClusterIP"
 todomanagerServiceType: "ClusterIP"
@@ -49,17 +52,7 @@ mysql:
     enabled: true
 
 ingress:
-  enabled: false
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+  enabled: true
   hosts:
     - host: todo.local
-      paths: []
-
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-
-
+      paths: ["/"]

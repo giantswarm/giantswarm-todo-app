@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 	"runtime"
 	"time"
 
@@ -10,6 +11,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"go.opencensus.io/plugin/ocgrpc"
 	"go.opencensus.io/trace"
+	"go.opencensus.io/zpages"
 	"google.golang.org/grpc"
 
 	todomgrpb "github.com/giantswarm/giantswarm-todo-app/todo-manager/pkg/proto"
@@ -37,6 +39,12 @@ func initTracing(config *todomgr.Config) {
 		log.Fatalf("Failed to create ocagent-exporter: %v", err)
 	}
 	trace.RegisterExporter(oce)
+
+	go func() {
+		mux := http.NewServeMux()
+		zpages.Handle(mux, "/debug")
+		log.Fatal(http.ListenAndServe(":8081", mux))
+	}()
 }
 
 func main() {

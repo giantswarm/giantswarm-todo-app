@@ -29,6 +29,9 @@ spec:
             - name: grpc
               containerPort: 8090
               protocol: TCP
+            - name: zpages
+              containerPort: 8081
+              protocol: TCP
           readinessProbe:
             exec:
               command:
