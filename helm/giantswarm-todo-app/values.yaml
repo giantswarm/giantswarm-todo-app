@@ -2,8 +2,8 @@
 
 clusterDomain: cluster.local
 
-todomanagerReplicaCount: 3
-apiserverReplicaCount: 3
+todomanagerReplicaCount: 1
+apiserverReplicaCount: 1
 
 todomanagerImage:
   registry: quay.io
