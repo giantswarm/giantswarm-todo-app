@@ -49,6 +49,7 @@ mysql:
   mysqlRootPassword: "verysecure"
   persistence:
     enabled: false
+    subPath: mysql-data
   securityContext:
     enabled: true
 
