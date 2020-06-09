@@ -4,10 +4,8 @@ go 1.13
 
 require (
 	contrib.go.opencensus.io/exporter/ocagent v0.7.0
-	github.com/go-chi/chi v4.0.3+incompatible // indirect
 	github.com/golang/protobuf v1.4.2
 	github.com/jinzhu/gorm v1.9.11
-	github.com/piontec/go-chi-middleware-server v0.1.1 // indirect
 	github.com/piontec/grpc-middleware-server v0.1.2
 	github.com/sirupsen/logrus v1.4.2
 	go.opencensus.io v0.22.3
@@ -16,5 +14,4 @@ require (
 	google.golang.org/api v0.26.0 // indirect
 	google.golang.org/genproto v0.0.0-20200604104852-0b0486081ffb // indirect
 	google.golang.org/grpc v1.29.1
-	gopkg.in/resty.v1 v1.12.0 // indirect
 )

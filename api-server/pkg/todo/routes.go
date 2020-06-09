@@ -3,13 +3,13 @@ package todo
 import (
 	"errors"
 	"io"
-	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"github.com/piontec/go-chi-middleware-server/pkg/server/middleware"
+	log "github.com/sirupsen/logrus"
 	"go.opencensus.io/plugin/ocgrpc"
 
 	// "go.opencensus.io/trace"

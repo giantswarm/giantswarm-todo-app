@@ -15,5 +15,4 @@ require (
 	google.golang.org/api v0.26.0 // indirect
 	google.golang.org/genproto v0.0.0-20200604104852-0b0486081ffb // indirect
 	google.golang.org/grpc v1.29.1
-	gopkg.in/resty.v1 v1.12.0 // indirect
 )

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"net/http"
 	"runtime"
 	"time"
@@ -9,7 +8,7 @@ import (
 	"contrib.go.opencensus.io/exporter/ocagent"
 	"github.com/go-chi/chi"
 	"github.com/piontec/go-chi-middleware-server/pkg/server"
-	"github.com/sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/plugin/ochttp/propagation/b3"
 	"go.opencensus.io/trace"
@@ -24,7 +23,7 @@ var (
 	date    = "unknown"
 )
 
-func printVersion(l *logrus.Logger) {
+func printVersion(l *log.Logger) {
 	l.Infof("apiserver version: %s, commit: %s, build date: %s", version, commit, date)
 	l.Infof("apiserver Go Version: %s, OS/Arch: %s/%s", runtime.Version(), runtime.GOOS, runtime.GOARCH)
 }
@@ -73,7 +72,7 @@ func main() {
 	}, &server.ChiServerOptions{
 		HTTPPort:              8080,
 		DisableOIDCMiddleware: true,
-		LoggerFields: logrus.Fields{
+		LoggerFields: log.Fields{
 			"ver": version,
 		},
 	})

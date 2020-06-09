@@ -1,14 +1,13 @@
 package main
 
 import (
-	"log"
 	"net/http"
 	"runtime"
 	"time"
 
 	"contrib.go.opencensus.io/exporter/ocagent"
 	grpcserver "github.com/piontec/grpc-middleware-server/pkg/server"
-	"github.com/sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 	"go.opencensus.io/plugin/ocgrpc"
 	"go.opencensus.io/trace"
 	"go.opencensus.io/zpages"
@@ -24,7 +23,7 @@ var (
 	date    = "unknown"
 )
 
-func printVersion(l *logrus.Logger) {
+func printVersion(l *log.Logger) {
 	l.Infof("apiserver version: %s, commit: %s, build date: %s", version, commit, date)
 	l.Infof("apiserver Go Version: %s, OS/Arch: %s/%s", runtime.Version(), runtime.GOOS, runtime.GOARCH)
 }
@@ -55,7 +54,7 @@ func main() {
 	server := grpcserver.NewGrpcServer(func(server *grpc.Server) {
 		todomgrpb.RegisterTodoManagerServer(server, todoMgr)
 	}, &grpcserver.GrpcServerOptions{
-		LoggerFields: logrus.Fields{
+		LoggerFields: log.Fields{
 			"ver": version,
 		},
 		AdditionalOptions: []grpc.ServerOption{
