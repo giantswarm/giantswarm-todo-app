@@ -46,6 +46,7 @@ mysql:
   mysqlDatabase: todo
   image: "quay.io/giantswarm/mysql"
   imageTag: "5.7.14-giantswarm"
+  mysqlRootPassword: "verysecure"
   persistence:
     enabled: false
   securityContext:
