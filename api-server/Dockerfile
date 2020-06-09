@@ -1,4 +1,4 @@
-FROM golang:1.13.1-alpine as builder
+FROM golang:1.13.12-alpine as builder
 ARG ver
 ARG commit
 RUN apk add make gcc build-base

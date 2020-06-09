@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
-	todomgrpb "github.com/giantswarm/blog-i-want-it-all/api-server/pkg/todo/proto"
+	todomgrpb "github.com/giantswarm/giantswarm-todo-app/api-server/pkg/todo/proto"
 )
 
 // Todo data model.

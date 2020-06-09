@@ -4,9 +4,10 @@ import "os"
 
 // Config holds server configuration
 type Config struct {
-	MysqlHost string
-	MysqlUser string
-	MysqlPass string
+	MysqlHost   string
+	MysqlUser   string
+	MysqlPass   string
+	OcAgentHost string
 }
 
 // NewConfig loads config from environment variables
@@ -23,10 +24,15 @@ func NewConfig() *Config {
 	if mysqlPass == "" {
 		panic("Required environment variable 'MYSQL_PASS' not set")
 	}
+	ocAgentHost := os.Getenv("OC_AGENT_HOST")
+	if ocAgentHost == "" {
+		panic("Required environment variable 'OC_AGENT_HOST' not set")
+	}
 
 	return &Config{
-		MysqlHost: mysqlHost,
-		MysqlUser: mysqlUser,
-		MysqlPass: mysqlPass,
+		MysqlHost:   mysqlHost,
+		MysqlUser:   mysqlUser,
+		MysqlPass:   mysqlPass,
+		OcAgentHost: ocAgentHost,
 	}
 }

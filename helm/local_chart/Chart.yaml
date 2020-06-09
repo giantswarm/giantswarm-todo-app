@@ -3,6 +3,7 @@ appVersion: 0.0.1
 version: 0.0.1
 description: 'A sample microservice TODO management application.'
 home: https://giantswarm.io
+icon: https://raw.githubusercontent.com/giantswarm/giantswarm-todo-app/master/img/icon-todo.png
 kubeVersion: ^1.10.0-0
 maintainers:
 - email: hello@giantswarm.io

@@ -27,5 +27,20 @@ Network policy: linkerd
 {{- define "giantswarm-todo.netpol.linkerd" -}}
 - namespaceSelector:
     matchLabels:
-      linkerd.io/control-plane-ns: {{ .Values.linkerdNamespace }}
+      name: {{ .Values.linkerdNamespace }}
+      linkerd.io/is-control-plane: "true"
+{{- end -}}
+
+{{/*
+Network policy: tracing
+*/}}
+{{- define "giantswarm-todo.netpol.tracing" -}}
+- namespaceSelector:
+    matchLabels:
+      name: {{ .Values.tracingNamespace }}
+- podSelector:
+    matchExpressions:
+      - key: app.kubernetes.io/component
+        operator: In
+        values: ["{{ .Values.opencensusCollectorComponentLabelValue }}"]
 {{- end -}}

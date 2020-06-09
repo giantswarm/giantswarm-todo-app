@@ -29,6 +29,9 @@ spec:
             - name: grpc
               containerPort: 8090
               protocol: TCP
+            - name: zpages
+              containerPort: 8081
+              protocol: TCP
           readinessProbe:
             exec:
               command:
@@ -37,6 +40,8 @@ spec:
             initialDelaySeconds: 2
             periodSeconds: 5
           env:
+            - name: "OC_AGENT_HOST"
+              value: "{{ .Values.opencensusCollectorServiceName }}.{{ .Values.tracingNamespace }}.svc.cluster.local:55678"
             - name: "MYSQL_HOST"
               value: "{{ .Release.Name }}-mysql.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}"
             - name: "MYSQL_USER"

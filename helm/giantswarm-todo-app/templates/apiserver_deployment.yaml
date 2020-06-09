@@ -28,9 +28,14 @@ spec:
           env:
             - name: "TODO_URL"
               value: "todomanager:8090"
+            - name: "OC_AGENT_HOST"
+              value: "{{ .Values.opencensusCollectorServiceName }}.{{ .Values.tracingNamespace }}.svc.cluster.local:55678"
           ports:
             - name: rest
               containerPort: 8080
+              protocol: TCP
+            - name: zpages
+              containerPort: 8081
               protocol: TCP
           readinessProbe:
             httpGet:

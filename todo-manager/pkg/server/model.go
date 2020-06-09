@@ -3,7 +3,7 @@ package server
 import (
 	"github.com/jinzhu/gorm"
 
-	todomgrpb "github.com/giantswarm/blog-i-want-it-all/todo-manager/pkg/proto"
+	todomgrpb "github.com/giantswarm/giantswarm-todo-app/todo-manager/pkg/proto"
 )
 
 // TodoEntry is an object used for ORM mapping into the DB

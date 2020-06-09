@@ -10,12 +10,15 @@ metadata:
   name: {{ $fullName }}
   namespace: {{ .Release.Namespace }}
   labels:
-{{ include "giantswarm-todo.generic.labels" . | indent 4 }}
-  {{- with .Values.ingress.annotations }}
+{{- include "giantswarm-todo.generic.labels" . | indent 4 }}
+{{- if semverCompare "<1.18-0" .Capabilities.KubeVersion.GitVersion }}
   annotations:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    kubernetes.io/ingress.class: nginx
+{{- end }}
 spec:
+{{- if semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion }}
+  IngressClassName: nginx
+{{- end }}
 {{- if .Values.ingress.tls }}
   tls:
   {{- range .Values.ingress.tls }}

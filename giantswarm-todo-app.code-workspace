@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "todo-manager"
+		},
+		{
+			"path": "api-server"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {}
+}
