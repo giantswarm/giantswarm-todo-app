@@ -6,9 +6,7 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-pytest = "*"
-kubetest = "*"
-kubernetes = "*"
+pytest-helm-charts = ">=0.1.2"
 pyyaml = "*"
 pytest-rerunfailures = "*"
 
