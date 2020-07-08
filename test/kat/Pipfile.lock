@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "2d283f861c16a4da159bf65ab2b0bf4b2c8953313531890ebeebb39c18ba89c9"
+            "sha256": "2da397bcba5761ea866500b843c6262e60ef0034fc8089cdec21debb236e8a2b"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -91,7 +91,7 @@
                 "sha256:24cfa6e955d9befd5173d64ee242f94af62c36de3edad1d91b311aa9d0175e46",
                 "sha256:84f3dbec0a4c60993153085f16b6814a2ce237c18dc101c588d567c7ae27fd9f"
             ],
-            "markers": "python_version >= '3.6'",
+            "index": "pypi",
             "version": "==20.7.2"
         },
         "pyparsing": {
@@ -107,7 +107,7 @@
                 "sha256:5c0db86b698e8f170ba4582a492248919255fcd4c79b1ee64ace34301fb589a1",
                 "sha256:7979331bfcba207414f5e1263b5a0f8f521d0f457318836a7355531ed1a4c7d8"
             ],
-            "markers": "python_version >= '3.5'",
+            "index": "pypi",
             "version": "==5.4.3"
         },
         "pytest-helm-charts": {
