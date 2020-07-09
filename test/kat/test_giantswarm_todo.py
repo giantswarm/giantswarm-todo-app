@@ -25,7 +25,12 @@ def deployments(kube_cluster: Cluster) -> List[Deployment]:
             deployment = deployments_response.get_by_name(deploy_name)
             assert deployment is not None
             my_deployments.append(deployment)
-        all_ready = all(d.ready for d in my_deployments)
+        all_ready = all(
+            d.ready
+            and "availableReplicas" in d.obj["status"]
+            and d.replicas == int(d.obj["status"]["availableReplicas"])
+            for d in my_deployments
+        )
         if all_ready:
             break
         time.sleep(1)
@@ -47,11 +52,11 @@ def test_services(kube_cluster: Cluster):
 
 def test_deployments(deployments: List[Deployment]):
     for d in deployments:
-        assert d.obj["status"]["availableReplicas"] > 0
+        assert int(d.obj["status"]["availableReplicas"]) > 0
 
 
 # By injecting fixtures, we can be sure that all deployments and the service are "Ready"
-# @pytest.mark.flaky(reruns=10, reruns_delay=3)
+@pytest.mark.flaky(reruns=10, reruns_delay=3)
 @pytest.mark.usefixtures("deployments")
 def test_get_todos(kube_cluster: Cluster):
     # unfortunately, when services and deployments are ready, traffic forwarding doesn't yet
@@ -69,6 +74,7 @@ def test_get_todos(kube_cluster: Cluster):
     assert res.headers["Content-Type"] == "application/json; charset=utf-8"
 
 
+@pytest.mark.flaky(reruns=10, reruns_delay=3)
 @pytest.mark.usefixtures("deployments")
 def test_create_delete_todo_entry(kube_cluster: Cluster):
     apiserver_service = (
