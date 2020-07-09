@@ -14,6 +14,7 @@ todo_timeout: int = 90
 def deployments(kube_cluster: Cluster) -> List[Deployment]:
     retries = 0
     all_ready = False
+    my_deployments: List[Deployment] = []
     while retries < todo_timeout:
         deployments_response = Deployment.objects(kube_cluster.kube_client).filter(namespace="default")
         retries += 1
