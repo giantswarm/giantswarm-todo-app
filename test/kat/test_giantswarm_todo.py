@@ -1,10 +1,10 @@
 import json
-import time
 from typing import List
 
 import pytest
 from pykube import Service, Deployment, HTTPClient
 from pytest_helm_charts.clusters import Cluster
+from pytest_helm_charts.utils import wait_for_deployments_to_run
 from requests import Response
 
 todo_timeout: int = 90
@@ -12,33 +12,10 @@ todo_timeout: int = 90
 
 @pytest.fixture(scope="function")
 def deployments(kube_cluster: Cluster) -> List[Deployment]:
-    retries = 0
-    all_ready = False
-    my_deployments: List[Deployment] = []
-    while retries < todo_timeout:
-        deployments_response = Deployment.objects(kube_cluster.kube_client).filter(
-            namespace="default"
-        )
-        retries += 1
-        my_deployments = []
-        for deploy_name in ["apiserver", "giantswarm-todo-app-mysql", "todomanager"]:
-            deployment = deployments_response.get_by_name(deploy_name)
-            assert deployment is not None
-            my_deployments.append(deployment)
-        all_ready = all(
-            d.ready
-            and "availableReplicas" in d.obj["status"]
-            and d.replicas == int(d.obj["status"]["availableReplicas"])
-            for d in my_deployments
-        )
-        if all_ready:
-            break
-        time.sleep(1)
-
-    if not all_ready:
-        raise TimeoutError("Error waiting for deployments to become 'ready'.")
-
-    return my_deployments
+    return wait_for_deployments_to_run(kube_cluster.kube_client,
+                                       ["apiserver", "giantswarm-todo-app-mysql", "todomanager"],
+                                       "default",
+                                       todo_timeout)
 
 
 def test_services(kube_cluster: Cluster):
@@ -63,8 +40,8 @@ def test_get_todos(kube_cluster: Cluster):
     # work fo 100% :( That's why we need a retry.
     apiserver_service = (
         Service.objects(kube_cluster.kube_client)
-        .filter(namespace="default")
-        .get(name="apiserver")
+            .filter(namespace="default")
+            .get(name="apiserver")
     )
     res = proxy_http_get(kube_cluster.kube_client, apiserver_service, "v1/todo")
     assert res is not None
@@ -79,8 +56,8 @@ def test_get_todos(kube_cluster: Cluster):
 def test_create_delete_todo_entry(kube_cluster: Cluster):
     apiserver_service = (
         Service.objects(kube_cluster.kube_client)
-        .filter(namespace="default")
-        .get(name="apiserver")
+            .filter(namespace="default")
+            .get(name="apiserver")
     )
     body = '{"Text":"testing"}'
     headers = {"Content-Type": "application/json"}
@@ -102,7 +79,7 @@ def test_create_delete_todo_entry(kube_cluster: Cluster):
 
 
 def _proxy_http_request(
-    client: HTTPClient, srv: Service, method, path, **kwargs
+        client: HTTPClient, srv: Service, method, path, **kwargs
 ) -> Response:
     """Template request to proxy of a Service.
     Args:
@@ -164,7 +141,7 @@ def proxy_http_put(client: HTTPClient, srv: Service, path: str, **kwargs) -> Res
 
 
 def proxy_http_delete(
-    client: HTTPClient, srv: Service, path: str, **kwargs
+        client: HTTPClient, srv: Service, path: str, **kwargs
 ) -> Response:
     """Issue a DELETE request to proxy of a Service.
     Args:
