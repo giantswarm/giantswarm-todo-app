@@ -22,6 +22,7 @@ def deployments(kube_cluster: Cluster) -> List[Deployment]:
         ["apiserver", "giantswarm-todo-app-mysql", "todomanager"],
         "default",
         todo_timeout,
+        missing_ok=False
     )
 
 
