@@ -4,7 +4,12 @@ from typing import List
 import pytest
 from pykube import Service, Deployment
 from pytest_helm_charts.clusters import Cluster
-from pytest_helm_charts.utils import wait_for_deployments_to_run, proxy_http_get, proxy_http_post, proxy_http_delete
+from pytest_helm_charts.utils import (
+    wait_for_deployments_to_run,
+    proxy_http_get,
+    proxy_http_post,
+    proxy_http_delete,
+)
 from requests import Response
 
 todo_timeout: int = 90
@@ -12,10 +17,12 @@ todo_timeout: int = 90
 
 @pytest.fixture(scope="function")
 def deployments(kube_cluster: Cluster) -> List[Deployment]:
-    return wait_for_deployments_to_run(kube_cluster.kube_client,
-                                       ["apiserver", "giantswarm-todo-app-mysql", "todomanager"],
-                                       "default",
-                                       todo_timeout)
+    return wait_for_deployments_to_run(
+        kube_cluster.kube_client,
+        ["apiserver", "giantswarm-todo-app-mysql", "todomanager"],
+        "default",
+        todo_timeout,
+    )
 
 
 def test_services(kube_cluster: Cluster):
@@ -40,8 +47,8 @@ def test_get_todos(kube_cluster: Cluster):
     # work fo 100% :( That's why we need a retry.
     apiserver_service = (
         Service.objects(kube_cluster.kube_client)
-            .filter(namespace="default")
-            .get(name="apiserver")
+        .filter(namespace="default")
+        .get(name="apiserver")
     )
     res = proxy_http_get(kube_cluster.kube_client, apiserver_service, "v1/todo")
     assert res is not None
@@ -56,8 +63,8 @@ def test_get_todos(kube_cluster: Cluster):
 def test_create_delete_todo_entry(kube_cluster: Cluster):
     apiserver_service = (
         Service.objects(kube_cluster.kube_client)
-            .filter(namespace="default")
-            .get(name="apiserver")
+        .filter(namespace="default")
+        .get(name="apiserver")
     )
     body = '{"Text":"testing"}'
     headers = {"Content-Type": "application/json"}
