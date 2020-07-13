@@ -2,9 +2,9 @@ import json
 from typing import List
 
 import pytest
-from pykube import Service, Deployment, HTTPClient
+from pykube import Service, Deployment
 from pytest_helm_charts.clusters import Cluster
-from pytest_helm_charts.utils import wait_for_deployments_to_run
+from pytest_helm_charts.utils import wait_for_deployments_to_run, proxy_http_get, proxy_http_post, proxy_http_delete
 from requests import Response
 
 todo_timeout: int = 90
@@ -76,80 +76,3 @@ def test_create_delete_todo_entry(kube_cluster: Cluster):
     )
     assert res is not None
     assert res.status_code == 200
-
-
-def _proxy_http_request(
-        client: HTTPClient, srv: Service, method, path, **kwargs
-) -> Response:
-    """Template request to proxy of a Service.
-    Args:
-        :param client: HTTPClient to use.
-        :param srv: Service you want to proxy.
-        :param method: The http request method e.g. 'GET', 'POST' etc.
-        :param path: The URI path for the request.
-        :param kwargs: Keyword arguments for the proxy_http_get function.
-    Returns:
-        The Response data.
-    """
-    if "port" in kwargs:
-        port = kwargs["port"]
-    else:
-        port = srv.obj["spec"]["ports"][0]["port"]
-    kwargs["url"] = f"services/{srv.name}:{port}/proxy/{path}"
-    kwargs["namespace"] = srv.namespace
-    kwargs["version"] = srv.version
-    return client.request(method, **kwargs)
-
-
-def proxy_http_get(client: HTTPClient, srv: Service, path: str, **kwargs) -> Response:
-    """Issue a GET request to proxy of a Service.
-    Args:
-        :param client: HTTPClient to use.
-        :param srv: Service you want to proxy.
-        :param path: The URI path for the request.
-        :param kwargs: Keyword arguments for the proxy_http_get function.
-    Returns:
-        The response data.
-    """
-    return _proxy_http_request(client, srv, "GET", path, **kwargs)
-
-
-def proxy_http_post(client: HTTPClient, srv: Service, path: str, **kwargs) -> Response:
-    """Issue a POST request to proxy of a Service.
-    Args:
-        :param client: HTTPClient to use.
-        :param srv: Service you want to proxy.
-        :param path: The URI path for the request.
-        :param kwargs: Keyword arguments for the proxy_http_get function.
-    Returns:
-        The response data.
-    """
-    return _proxy_http_request(client, srv, "POST", path, **kwargs)
-
-
-def proxy_http_put(client: HTTPClient, srv: Service, path: str, **kwargs) -> Response:
-    """Issue a PUT request to proxy of a Service.
-    Args:
-        :param client: HTTPClient to use.
-        :param srv: Service you want to proxy.
-        :param path: The URI path for the request.
-        :param kwargs: Keyword arguments for the proxy_http_get function.
-    Returns:
-        The response data.
-    """
-    return _proxy_http_request(client, srv, "PUT", path, **kwargs)
-
-
-def proxy_http_delete(
-        client: HTTPClient, srv: Service, path: str, **kwargs
-) -> Response:
-    """Issue a DELETE request to proxy of a Service.
-    Args:
-        :param client: HTTPClient to use.
-        :param srv: Service you want to proxy.
-        :param path: The URI path for the request.
-        :param kwargs: Keyword arguments for the proxy_http_get function.
-    Returns:
-        The response data.
-    """
-    return _proxy_http_request(client, srv, "DELETE", path, **kwargs)
