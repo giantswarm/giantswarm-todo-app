@@ -1,5 +1,6 @@
 import json
-from typing import List
+import logging
+from typing import List, Dict
 
 import pytest
 from pykube import Service, Deployment
@@ -12,6 +13,8 @@ from pytest_helm_charts.utils import (
 )
 from requests import Response
 
+
+logger = logging.getLogger("kube-app-testing")
 todo_timeout: int = 90
 
 
@@ -43,9 +46,10 @@ def test_deployments(deployments: List[Deployment]):
 # By injecting fixtures, we can be sure that all deployments and the service are "Ready"
 @pytest.mark.flaky(reruns=10, reruns_delay=3)
 @pytest.mark.usefixtures("deployments")
-def test_get_todos(kube_cluster: Cluster):
+def test_get_todos(kube_cluster: Cluster, cluster_type: str, chart_extra_info: Dict[str, str]):
     # unfortunately, when services and deployments are ready, traffic forwarding doesn't yet
     # work fo 100% :( That's why we need a retry.
+    logger.info(f"Running on cluster of type {cluster_type}, extra info is: {chart_extra_info}")
     apiserver_service = (
         Service.objects(kube_cluster.kube_client)
         .filter(namespace="default")
