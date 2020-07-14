@@ -37,7 +37,7 @@ jobs:
       - run: IMG_VER=$(cat .version) make docker-build
       - run: echo -n "${QUAY_PASSWORD}" | docker login --username "${QUAY_USERNAME}" --password-stdin quay.io 
       - run: IMG_VER=$(cat .version) make docker-push
-  run_kat_tests:
+  run_kat_tests_on_gs:
     machine:
       image: ubuntu-1604:201903-01
     working_directory:
@@ -88,14 +88,31 @@ workflows:
           filters:
             tags:
               only: /^v.*/
-      - run_kat_tests:
+      - architect/run-kat-tests:
+          name: "run kat tests"
+          chart: "giantswarm-todo-app"
           requires:
             - build_apiserver
             - build_todomanager
+          filters:
+            tags:
+              only: /^v.*/
+      - hold_run_on_gs:
+          type: approval
+          filters:
+            tags:
+              only: /^v.*/
+      - run_kat_tests_on_gs:
+          requires:
+            - "run kat tests"
+            - hold_run_on_gs
+          filters:
+            tags:
+              only: /^v.*/
       - architect/push-to-app-catalog:
           name: "package and push giantswarm-todo-app chart"
           requires:
-            - "run_kat_tests"
+            - "run kat tests"
           app_catalog: "giantswarm-playground-catalog"
           app_catalog_test: "giantswarm-playground-test-catalog"
           chart: "giantswarm-todo-app"
