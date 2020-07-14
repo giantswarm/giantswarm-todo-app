@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@0.8.13
+  architect: giantswarm/architect@0.10.0
 
 jobs:
   checkout_code:
@@ -74,6 +74,7 @@ workflows:
           app_catalog: "giantswarm-playground-catalog"
           app_catalog_test: "giantswarm-playground-test-catalog"
           chart: "giantswarm-todo-app"
+          ct_config: ".circleci/ct-config.yaml"
           # Trigger job on git tag.
           filters:
             tags:
