@@ -8,6 +8,7 @@ import (
 	"contrib.go.opencensus.io/exporter/ocagent"
 	"github.com/go-chi/chi"
 	"github.com/piontec/go-chi-middleware-server/pkg/server"
+	"github.com/piontec/go-chi-middleware-server/pkg/server/middleware"
 	log "github.com/sirupsen/logrus"
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/plugin/ochttp/propagation/b3"
@@ -74,6 +75,14 @@ func main() {
 		DisableOIDCMiddleware: true,
 		LoggerFields: log.Fields{
 			"ver": version,
+		},
+		LoggerFieldFuncs: middleware.LogrusFieldFuncs{
+			"traceId": func(r *http.Request) string {
+				if val, found := r.Header["X-B3-Traceid"]; found {
+					return val[0]
+				}
+				return "not-present"
+			},
 		},
 	})
 	printVersion(server.GetLogger())
