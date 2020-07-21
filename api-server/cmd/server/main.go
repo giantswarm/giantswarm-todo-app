@@ -6,9 +6,11 @@ import (
 	"time"
 
 	"contrib.go.opencensus.io/exporter/ocagent"
+	prometheusmiddleware "github.com/albertogviana/prometheus-middleware"
 	"github.com/go-chi/chi"
 	"github.com/piontec/go-chi-middleware-server/pkg/server"
 	"github.com/piontec/go-chi-middleware-server/pkg/server/middleware"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	log "github.com/sirupsen/logrus"
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/plugin/ochttp/propagation/b3"
@@ -52,7 +54,10 @@ func main() {
 	config := todo.NewConfig()
 	initTracing(config)
 
+	promMiddleware := prometheusmiddleware.NewPrometheusMiddleware(prometheusmiddleware.Opts{})
+
 	server := server.NewChiServer(func(r *chi.Mux) {
+		r.Use(promMiddleware.InstrumentHandlerDuration)
 		r.Use(func(handler http.Handler) http.Handler {
 			return &ochttp.Handler{
 				Handler:          handler,
@@ -70,6 +75,7 @@ func main() {
 			r.Mount("/todo",
 				todo.NewRouter(config.TodoURL).GetRouter())
 		})
+		r.Mount("/metrics", promhttp.Handler())
 	}, &server.ChiServerOptions{
 		HTTPPort:              8080,
 		DisableOIDCMiddleware: true,
