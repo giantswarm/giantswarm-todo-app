@@ -9,7 +9,7 @@ require (
 	github.com/go-chi/render v1.0.1
 	github.com/golang/protobuf v1.4.2
 	github.com/piontec/go-chi-middleware-server v0.1.2
-	github.com/prometheus/client_golang v1.7.1 // indirect
+	github.com/prometheus/client_golang v1.7.1
 	github.com/sirupsen/logrus v1.4.2
 	go.opencensus.io v0.22.3
 	golang.org/x/net v0.0.0-20200602114024-627f9648deb9 // indirect
