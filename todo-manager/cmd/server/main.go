@@ -60,6 +60,7 @@ func main() {
 		AdditionalOptions: []grpc.ServerOption{
 			grpc.StatsHandler(&ocgrpc.ServerHandler{}),
 		},
+		MetricsPort: 8080,
 	})
 	printVersion(server.GetLogger())
 	server.Run()
