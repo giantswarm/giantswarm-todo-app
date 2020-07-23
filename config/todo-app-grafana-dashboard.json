@@ -105,7 +105,12 @@
       }
     },
     {
+      "aliasColors": {},
+      "bars": true,
+      "dashLength": 10,
+      "dashes": false,
       "datasource": "prometheus",
+      "fill": 1,
       "gridPos": {
         "h": 7,
         "w": 12,
@@ -113,44 +118,78 @@
         "y": 0
       },
       "id": 4,
-      "links": [],
-      "options": {
-        "displayMode": "basic",
-        "fieldOptions": {
-          "calcs": [
-            "last"
-          ],
-          "defaults": {
-            "max": 1,
-            "min": 0,
-            "title": "",
-            "unit": "percentunit"
-          },
-          "mappings": [],
-          "override": {},
-          "thresholds": [
-            {
-              "color": "green",
-              "index": 0,
-              "value": null
-            }
-          ],
-          "values": false
-        },
-        "orientation": "vertical"
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
       },
+      "lines": false,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {},
+      "percentage": true,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
       "targets": [
         {
-          "expr": "sum by (code,method) (http_requests_total{path=~\"/v1/.+\", container=\"apiserver\"}) / ignoring(code,method) group_left sum(http_requests_total{path=~\"/v1/.+\", container=\"apiserver\"})",
+          "expr": "sum by (code,method) (increase(http_requests_total{path=~\"/v1/.+\", container=\"apiserver\"}[1m])) / ignoring(code,method) group_left sum(increase(http_requests_total{path=~\"/v1/.+\", container=\"apiserver\"}[1m]))",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 1,
+          "legendFormat": "{{method}}-{{code}}",
           "refId": "A"
         }
       ],
+      "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Request percentage by HTTP code and method",
-      "type": "bargauge"
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "cards": {
@@ -164,7 +203,7 @@
         "exponent": 0.5,
         "mode": "spectrum"
       },
-      "dataFormat": "timeseries",
+      "dataFormat": "tsbuckets",
       "gridPos": {
         "h": 8,
         "w": 24,
@@ -183,9 +222,11 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum by (container,le)(http_request_duration_seconds_bucket{container=\"apiserver\", path=~\"/v1/.*\"})",
-          "format": "time_series",
+          "expr": "sum (increase(http_request_duration_seconds_bucket{container=\"apiserver\", path=~\"/v1/.*\"}[1m])) by (le)",
+          "format": "heatmap",
+          "interval": "",
           "intervalFactor": 1,
+          "legendFormat": "{{le}}",
           "refId": "A"
         }
       ],
@@ -204,7 +245,7 @@
       "xBucketSize": null,
       "yAxis": {
         "decimals": null,
-        "format": "short",
+        "format": "s",
         "logBase": 1,
         "max": null,
         "min": null,
@@ -216,6 +257,7 @@
       "yBucketSize": null
     }
   ],
+  "refresh": false,
   "schemaVersion": 18,
   "style": "dark",
   "tags": [],
@@ -223,8 +265,8 @@
     "list": []
   },
   "time": {
-    "from": "now-6h",
-    "to": "now"
+    "from": "2020-07-23T10:22:11.131Z",
+    "to": "2020-07-23T10:26:04.485Z"
   },
   "timepicker": {
     "refresh_intervals": [
@@ -254,5 +296,5 @@
   "timezone": "",
   "title": "Giantswarm Todo App",
   "uid": "y5ryMq7Mk",
-  "version": 5
+  "version": 9
 }
