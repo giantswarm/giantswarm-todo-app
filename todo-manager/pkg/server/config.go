@@ -35,7 +35,7 @@ func NewConfig() *Config {
 	boolEnableFailures := false
 	enableFailures := os.Getenv("ENABLE_FAILURES")
 	if enableFailures != "" {
-		if b, err := strconv.ParseBool(enableFailures); err != nil && b {
+		if b, err := strconv.ParseBool(enableFailures); err == nil && b {
 			boolEnableFailures = true
 		}
 	}

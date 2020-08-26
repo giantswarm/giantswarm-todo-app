@@ -63,6 +63,9 @@ func main() {
 		MetricsPort: 8080,
 	})
 	printVersion(server.GetLogger())
+	if config.EnableFailures {
+		server.GetLogger().Warn("Failures Middleware is enabled")
+	}
 	server.Run()
 	todoMgr.Stop()
 }

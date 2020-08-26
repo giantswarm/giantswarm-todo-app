@@ -95,5 +95,8 @@ func main() {
 		},
 	})
 	printVersion(server.GetLogger())
+	if config.EnableFailures {
+		server.GetLogger().Warn("Failures Middleware is enabled")
+	}
 	server.Run()
 }
