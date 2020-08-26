@@ -48,28 +48,28 @@ func NewRouter(todoManagerAddr string) *Router {
 		grpcClient: client,
 		getAllCounter: promauto.NewCounterVec(prometheus.CounterOpts{
 			Subsystem: "todo",
-			Name: "get_all_count_total",
-			Help: "The total number of successful GETs for all the todos of an user",
+			Name:      "get_all_count_total",
+			Help:      "The total number of successful GETs for all the todos of an user",
 		}, []string{"user"}),
 		getOneCounter: promauto.NewCounterVec(prometheus.CounterOpts{
 			Subsystem: "todo",
-			Name: "get_one_count_total",
-			Help: "The total number of successful GETs for a single todo of an user",
+			Name:      "get_one_count_total",
+			Help:      "The total number of successful GETs for a single todo of an user",
 		}, []string{"user"}),
 		deleteOneCounter: promauto.NewCounterVec(prometheus.CounterOpts{
 			Subsystem: "todo",
-			Name: "delete_one_count_total",
-			Help: "The total number of successful DELETEs for a single todo of an user",
+			Name:      "delete_one_count_total",
+			Help:      "The total number of successful DELETEs for a single todo of an user",
 		}, []string{"user"}),
 		createOneCounter: promauto.NewCounterVec(prometheus.CounterOpts{
 			Subsystem: "todo",
-			Name: "create_one_count_total",
-			Help: "The total number of successful POSTs for a single todo of an user",
+			Name:      "create_one_count_total",
+			Help:      "The total number of successful POSTs for a single todo of an user",
 		}, []string{"user"}),
 		updateOneCounter: promauto.NewCounterVec(prometheus.CounterOpts{
 			Subsystem: "todo",
-			Name: "update_one_count_total",
-			Help: "The total number of successful PUTs for a single todo of an user",
+			Name:      "update_one_count_total",
+			Help:      "The total number of successful PUTs for a single todo of an user",
 		}, []string{"user"}),
 	}
 }
