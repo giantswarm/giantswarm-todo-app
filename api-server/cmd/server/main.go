@@ -71,7 +71,9 @@ func main() {
 				},
 			}
 		})
-		r.Use(todo.FailureMiddleware)
+		if config.EnableFailures {
+			r.Use(todo.FailureMiddleware)
+		}
 		r.Route("/v1", func(r chi.Router) {
 			r.Mount("/todo",
 				todo.NewRouter(config.TodoURL).GetRouter())
