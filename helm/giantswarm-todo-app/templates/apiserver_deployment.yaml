@@ -30,6 +30,8 @@ spec:
               value: "todomanager:8090"
             - name: "OC_AGENT_HOST"
               value: "{{ .Values.opencensusCollectorServiceName }}.{{ .Values.tracingNamespace }}.svc.cluster.local:55678"
+            - name: "ENABLE_FAILURES"
+              value: "{{ .Values.failuresEnabled }}"
           ports:
             - name: rest
               containerPort: 8080

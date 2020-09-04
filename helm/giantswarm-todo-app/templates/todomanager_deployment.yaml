@@ -54,6 +54,8 @@ spec:
                 secretKeyRef:
                   name: {{ .Release.Name }}-mysql
                   key: mysql-root-password
+            - name: "ENABLE_FAILURES"
+              value: "{{ .Values.failuresEnabled }}"
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
             
