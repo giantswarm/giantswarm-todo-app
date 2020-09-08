@@ -13,6 +13,7 @@
           remote_addr: '"peer.address"'
           span_kind: '"span.kind"'
           system: system
+          traceId: trace_id
     - labels:
         grpc_code:
         grpc_method:
@@ -22,6 +23,7 @@
         peer_address:
         span_kind:
         system:
+        trace_id:
     - output:
         source: msg
     - timestamp:
@@ -67,6 +69,7 @@
           remote_addr:
           level:
           msg:
+          traceId: trace_id
     - labels:
         http_method:
         http_proto:
@@ -80,6 +83,7 @@
         req_id:
         remote_addr:
         level:
+        traceId:
     - output:
         source: msg
     - timestamp:
