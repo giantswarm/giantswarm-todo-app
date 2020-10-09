@@ -103,7 +103,7 @@ subjects:
     namespace: {{ .Release.Namespace }}
 roleRef:
   kind: Role
-  namespace: {{ .Release.Namespace }}
+  name: namespace-tagger
   apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: batch/v1
