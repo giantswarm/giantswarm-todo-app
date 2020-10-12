@@ -27,7 +27,6 @@ Network policy: linkerd
 {{- define "giantswarm-todo.netpol.linkerd" -}}
 - namespaceSelector:
     matchLabels:
-      name: {{ .Values.linkerdNamespace }}
       linkerd.io/is-control-plane: "true"
 {{- end -}}
 
