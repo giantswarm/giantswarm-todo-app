@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@0.10.0
+  architect: giantswarm/architect@0.15.0
 
 jobs:
   checkout_code:
@@ -24,7 +24,7 @@ jobs:
           key: repo-{{ .Environment.CIRCLE_SHA1 }}-<< pipeline.git.tag >>
       - run: cat .version
       - run: IMG_VER=$(cat .version) make docker-build
-      - run: echo -n "${QUAY_PASSWORD}" | docker login --username "${QUAY_USERNAME}" --password-stdin quay.io 
+      - run: echo -n "${QUAY_PASSWORD}" | docker login --username "${QUAY_USERNAME}" --password-stdin quay.io
       - run: IMG_VER=$(cat .version) make docker-push
   build_todomanager:
     machine: true
@@ -35,7 +35,7 @@ jobs:
           key: repo-{{ .Environment.CIRCLE_SHA1 }}-<< pipeline.git.tag >>
       - run: cat .version
       - run: IMG_VER=$(cat .version) make docker-build
-      - run: echo -n "${QUAY_PASSWORD}" | docker login --username "${QUAY_USERNAME}" --password-stdin quay.io 
+      - run: echo -n "${QUAY_PASSWORD}" | docker login --username "${QUAY_USERNAME}" --password-stdin quay.io
       - run: IMG_VER=$(cat .version) make docker-push
 
 workflows:
