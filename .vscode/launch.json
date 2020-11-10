@@ -11,7 +11,8 @@
             "mode": "debug",
             "program": "${workspaceFolder}/api-server/cmd/server/main.go",
             "env": {
-                "TODO_URL": "localhost:8090"
+                "TODO_URL": "localhost:8090",
+                "OC_AGENT_HOST": "localhost:8090"
             }
         },
         {

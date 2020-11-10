@@ -24,8 +24,8 @@ var (
 )
 
 func printVersion(l *log.Logger) {
-	l.Infof("apiserver version: %s, commit: %s, build date: %s", version, commit, date)
-	l.Infof("apiserver Go Version: %s, OS/Arch: %s/%s", runtime.Version(), runtime.GOOS, runtime.GOARCH)
+	l.Infof("todomanager version: %s, commit: %s, build date: %s", version, commit, date)
+	l.Infof("todomanager Go Version: %s, OS/Arch: %s/%s", runtime.Version(), runtime.GOOS, runtime.GOARCH)
 }
 
 func initTracing(config *todomgr.Config) {
@@ -60,6 +60,7 @@ func main() {
 		AdditionalOptions: []grpc.ServerOption{
 			grpc.StatsHandler(&ocgrpc.ServerHandler{}),
 		},
+		MetricsPort: 8080,
 	})
 	printVersion(server.GetLogger())
 	server.Run()
