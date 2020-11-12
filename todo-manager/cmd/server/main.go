@@ -68,6 +68,7 @@ func main() {
 	if config.EnableFailures {
 		server.GetLogger().Warn("Failures Middleware is enabled")
 	}
+	server.GetLogger().Infof("Tracing instrumentation is %v", config.EnableTracing)
 	server.Run()
 	todoMgr.Stop()
 }
