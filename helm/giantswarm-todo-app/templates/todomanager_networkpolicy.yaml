@@ -1,3 +1,4 @@
+{{- if .Values.netpolsEnabled }}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -41,4 +42,5 @@ spec:
 {{- if .Values.tracingEnabled }}
   - to:
 {{ include "giantswarm-todo.netpol.tracing" . | indent 4 }}
+{{- end }}
 {{- end }}
