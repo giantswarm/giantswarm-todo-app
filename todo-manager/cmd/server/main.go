@@ -48,7 +48,9 @@ func initTracing(config *todomgr.Config) {
 
 func main() {
 	config := todomgr.NewConfig()
-	initTracing(config)
+	if config.EnableTracing {
+		initTracing(config)
+	}
 	todoMgr := todomgr.NewTodoManagerServer(config)
 
 	server := grpcserver.NewGrpcServer(func(server *grpc.Server) {

@@ -52,7 +52,9 @@ func initTracing(config *todo.Config) {
 
 func main() {
 	config := todo.NewConfig()
-	initTracing(config)
+	if config.EnableTracing {
+		initTracing(config)
+	}
 
 	promMiddleware := prometheusmiddleware.NewPrometheusMiddleware(prometheusmiddleware.Opts{})
 

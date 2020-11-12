@@ -7,9 +7,9 @@ import (
 	"math/rand"
 	"time"
 
-	log "github.com/sirupsen/logrus"
 	todomgrpb "github.com/giantswarm/giantswarm-todo-app/todo-manager/pkg/proto"
 	"github.com/jinzhu/gorm"
+	log "github.com/sirupsen/logrus"
 	"go.opencensus.io/trace"
 
 	// initialize mysql gorm driver

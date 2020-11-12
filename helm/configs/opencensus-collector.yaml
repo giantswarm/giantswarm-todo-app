@@ -1,2 +1,2 @@
-jaegerURL: http://jaeger-all-in-one-default-collector.tracing:14268/api/traces
+jaegerURL: http://jaeger-operator-jaeger-operator-app-jaeger-collector.tracing:14268/api/traces
 linkerdEnabled: true

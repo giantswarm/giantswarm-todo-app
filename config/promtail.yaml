@@ -69,7 +69,7 @@
           remote_addr:
           level:
           msg:
-          traceId: trace_id
+          traceId: traceId
     - labels:
         http_method:
         http_proto:

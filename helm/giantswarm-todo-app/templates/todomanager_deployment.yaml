@@ -43,6 +43,8 @@ spec:
             initialDelaySeconds: 2
             periodSeconds: 5
           env:
+            - name: "ENABLE_TRACING"
+              value: "{{ .Values.tracingEnabled }}"
             - name: "OC_AGENT_HOST"
               value: "{{ .Values.opencensusCollectorServiceName }}.{{ .Values.tracingNamespace }}.svc.cluster.local:55678"
             - name: "MYSQL_HOST"
