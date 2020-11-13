@@ -43,7 +43,6 @@ helm install --name gs-todo --namespace todo --version 0.2.2 giantswarm-playgrou
 
 | Variable                  | Default                  | Description                                               |
 | ------------------------- | ------------------------ | --------------------------------------------------------- |
-| clusterDomain             | cluster.local            | your domain configured for Kubernetes cluster             |
 | todomanagerReplicaCount   | 3                        | How many replicas to create for todomanager               |
 | apiserverReplicaCount     | 3                        | How many replicas to create for apiserver                 |
 | resources                 | cpu: 100m, memory: 128Mi | Kubernetes limits used for todomanager and apiserver pods |
