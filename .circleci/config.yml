@@ -75,7 +75,7 @@ workflows:
           app_catalog_test: "giantswarm-playground-test-catalog"
           chart: "giantswarm-todo-app"
           ct_config: ".circleci/ct-config.yaml"
-          # Trigger job on git tag.
+          # Trigger job on git tag
           filters:
             tags:
               only: /^v.*/
