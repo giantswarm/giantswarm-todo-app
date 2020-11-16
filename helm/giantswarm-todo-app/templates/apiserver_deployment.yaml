@@ -27,7 +27,7 @@ spec:
           imagePullPolicy: "{{ .Values.apiserverImage.pullPolicy }}"
           env:
             - name: "ENABLE_TRACING"
-              value: "{{ .Values.tracingEnabled }}"
+              value: "{{ .Values.appTracingEnabled }}"
             - name: "TODO_URL"
               value: "todomanager:8090"
             - name: "OC_AGENT_HOST"
