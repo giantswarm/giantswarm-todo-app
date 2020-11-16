@@ -7,6 +7,8 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 
 ## [Unreleased]
 
+- add: new option to enable/disable app tracing mechanism only, independently of NS tracing setting
+
 ## [0.5.1] - 2020-11-16
 
 - Introduce artificial failure modes
