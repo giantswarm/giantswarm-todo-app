@@ -9,4 +9,4 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 
 - Introduce artificial failure modes
 
-[Unreleased]: https://github.com/giantswarm/giantswarm-todo-app/compare/v0.0.1...master
+[Unreleased]: https://github.com/giantswarm/giantswarm-todo-app/compare/v0.0.1...HEAD
