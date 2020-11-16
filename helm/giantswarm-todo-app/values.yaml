@@ -36,6 +36,7 @@ linkerdEnabled: true
 linkerdNamespace: linkerd
 
 tracingEnabled: true
+appTracingEnabled: true
 tracingNamespace: tracing
 opencensusCollectorServiceName: opencensus-collector-opencensus-collector-app
 opencensusCollectorComponentLabelValue: oc-collector

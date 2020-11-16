@@ -44,7 +44,7 @@ spec:
             periodSeconds: 5
           env:
             - name: "ENABLE_TRACING"
-              value: "{{ .Values.tracingEnabled }}"
+              value: "{{ .Values.appTracingEnabled }}"
             - name: "OC_AGENT_HOST"
               value: "{{ .Values.opencensusCollectorServiceName }}.{{ .Values.tracingNamespace }}:55678"
             - name: "MYSQL_HOST"
