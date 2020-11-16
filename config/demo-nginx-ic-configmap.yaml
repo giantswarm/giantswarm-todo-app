@@ -1,0 +1,14 @@
+apiVersion: v1
+data:
+  enable-opentracing: "true"
+  hsts: "false"
+  map-hash-bucket-size: "128"
+  zipkin-collector-host: linkerd-collector.linkerd
+  zipkin-sample-rate: "1.0"
+kind: ConfigMap
+metadata:
+  labels:
+    addonmanager.kubernetes.io/mode: EnsureExists
+  name: nginx-load-balancer-conf
+  namespace: kube-system
+

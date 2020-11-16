@@ -1,2 +1,5 @@
 failuresEnabled: true
 tracingEnabled: true
+netpolsEnabled: false
+opencensusCollectorServiceName: linkerd-collector
+tracingNamespace: linkerd

@@ -1,0 +1,12 @@
+global:
+  proxy:
+    logLevel: info,linkerd=debug
+  tracing:
+    enabled: true
+identity:
+  issuer:
+    scheme: "linkerd.io/cert-manager" 
+grafana:
+  auth:
+    anonymous:
+      role: Admin
