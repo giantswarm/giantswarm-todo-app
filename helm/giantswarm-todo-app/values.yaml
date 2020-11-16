@@ -1,7 +1,5 @@
 # Default values for giantswarm-todo.
 
-clusterDomain: cluster.local
-
 todomanagerReplicaCount: 1
 apiserverReplicaCount: 1
 
@@ -30,6 +28,9 @@ resources:
   requests:
     cpu: 100m
     memory: 128Mi
+
+netpolsEnabled: true
+failuresEnabled: false
 
 linkerdEnabled: true
 linkerdNamespace: linkerd

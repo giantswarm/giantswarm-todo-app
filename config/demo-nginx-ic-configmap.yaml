@@ -3,7 +3,7 @@ data:
   enable-opentracing: "true"
   hsts: "false"
   map-hash-bucket-size: "128"
-  zipkin-collector-host: opencensus-collector-opencensus-collector-app.tracing
+  zipkin-collector-host: linkerd-collector.linkerd
   zipkin-sample-rate: "1.0"
 kind: ConfigMap
 metadata:

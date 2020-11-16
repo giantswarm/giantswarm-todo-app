@@ -52,7 +52,9 @@ func initTracing(config *todo.Config) {
 
 func main() {
 	config := todo.NewConfig()
-	initTracing(config)
+	if config.EnableTracing {
+		initTracing(config)
+	}
 
 	promMiddleware := prometheusmiddleware.NewPrometheusMiddleware(prometheusmiddleware.Opts{})
 
@@ -71,6 +73,9 @@ func main() {
 				},
 			}
 		})
+		if config.EnableFailures {
+			r.Use(todo.FailureMiddleware)
+		}
 		r.Route("/v1", func(r chi.Router) {
 			r.Mount("/todo",
 				todo.NewRouter(config.TodoURL).GetRouter())
@@ -92,5 +97,9 @@ func main() {
 		},
 	})
 	printVersion(server.GetLogger())
+	if config.EnableFailures {
+		server.GetLogger().Warn("Failures Middleware is enabled")
+	}
+	server.GetLogger().Infof("Tracing instrumentation is %v", config.EnableTracing)
 	server.Run()
 }

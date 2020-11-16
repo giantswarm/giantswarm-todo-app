@@ -4,9 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"math/rand"
+	"time"
 
 	todomgrpb "github.com/giantswarm/giantswarm-todo-app/todo-manager/pkg/proto"
 	"github.com/jinzhu/gorm"
+	log "github.com/sirupsen/logrus"
 	"go.opencensus.io/trace"
 
 	// initialize mysql gorm driver
@@ -60,6 +63,13 @@ func (t *TodoManagerServer) CreateTodo(ctx context.Context, todo *todomgrpb.Todo
 func (t *TodoManagerServer) ListTodos(req *todomgrpb.ListTodosReq, srv todomgrpb.TodoManager_ListTodosServer) error {
 	var todos []TodoEntry
 	_, span := trace.StartSpan(srv.Context(), "db-list")
+	log.Info("DB: starting 'list all' query for all the entries of an owner.")
+	if t.config.EnableFailures {
+		if num := rand.Int() % 10; num == 0 {
+			// simulate the DB is really slow
+			time.Sleep(time.Duration(rand.Int()%3+1) * time.Second)
+		}
+	}
 	t.db.Where("owner = ?", req.Owner).Find(&todos)
 	span.End()
 	for _, t := range todos {

@@ -43,10 +43,12 @@ spec:
             initialDelaySeconds: 2
             periodSeconds: 5
           env:
+            - name: "ENABLE_TRACING"
+              value: "{{ .Values.tracingEnabled }}"
             - name: "OC_AGENT_HOST"
-              value: "{{ .Values.opencensusCollectorServiceName }}.{{ .Values.tracingNamespace }}.svc.cluster.local:55678"
+              value: "{{ .Values.opencensusCollectorServiceName }}.{{ .Values.tracingNamespace }}:55678"
             - name: "MYSQL_HOST"
-              value: "{{ .Release.Name }}-mysql.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}"
+              value: "{{ .Release.Name }}-mysql.{{ .Release.Namespace }}"
             - name: "MYSQL_USER"
               value: "root"
             - name: "MYSQL_PASS"
@@ -54,6 +56,8 @@ spec:
                 secretKeyRef:
                   name: {{ .Release.Name }}-mysql
                   key: mysql-root-password
+            - name: "ENABLE_FAILURES"
+              value: "{{ .Values.failuresEnabled }}"
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
             

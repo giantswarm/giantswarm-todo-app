@@ -48,7 +48,9 @@ func initTracing(config *todomgr.Config) {
 
 func main() {
 	config := todomgr.NewConfig()
-	initTracing(config)
+	if config.EnableTracing {
+		initTracing(config)
+	}
 	todoMgr := todomgr.NewTodoManagerServer(config)
 
 	server := grpcserver.NewGrpcServer(func(server *grpc.Server) {
@@ -63,6 +65,10 @@ func main() {
 		MetricsPort: 8080,
 	})
 	printVersion(server.GetLogger())
+	if config.EnableFailures {
+		server.GetLogger().Warn("Failures Middleware is enabled")
+	}
+	server.GetLogger().Infof("Tracing instrumentation is %v", config.EnableTracing)
 	server.Run()
 	todoMgr.Stop()
 }

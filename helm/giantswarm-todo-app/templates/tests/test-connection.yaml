@@ -11,5 +11,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args:  ['apiserver.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}:8080/v1/']
+      args:  ['apiserver.{{ .Release.Namespace }}:8080/v1/']
   restartPolicy: Never

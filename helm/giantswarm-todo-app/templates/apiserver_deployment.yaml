@@ -26,10 +26,14 @@ spec:
           image: "{{ .Values.apiserverImage.registry }}/{{ .Values.apiserverImage.name }}:{{ .Values.apiserverImage.tag }}"
           imagePullPolicy: "{{ .Values.apiserverImage.pullPolicy }}"
           env:
+            - name: "ENABLE_TRACING"
+              value: "{{ .Values.tracingEnabled }}"
             - name: "TODO_URL"
               value: "todomanager:8090"
             - name: "OC_AGENT_HOST"
-              value: "{{ .Values.opencensusCollectorServiceName }}.{{ .Values.tracingNamespace }}.svc.cluster.local:55678"
+              value: "{{ .Values.opencensusCollectorServiceName }}.{{ .Values.tracingNamespace }}:55678"
+            - name: "ENABLE_FAILURES"
+              value: "{{ .Values.failuresEnabled }}"
           ports:
             - name: rest
               containerPort: 8080
