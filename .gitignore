@@ -4,3 +4,4 @@ test-results/**
 test/kind/__pycache__
 helm/giantswarm-todo-app/charts/*.tgz
 test/kat/.idea
+promtail.yaml
