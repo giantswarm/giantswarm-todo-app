@@ -2,3 +2,5 @@ replace-app-version-with-git: true
 replace-chart-version-with-git: true
 generate-metadata: true
 ct-config: .circleci/ct-config.yaml
+chart-dir: ./helm/giantswarm-todo-app
+destination: ./build
