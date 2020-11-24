@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  architect: giantswarm/architect@dev:include-abs-in-push-to-app-catalog
+  architect: giantswarm/architect@0.17.1
 
 jobs:
   checkout_code:
@@ -75,7 +75,7 @@ workflows:
           app_catalog_test: "giantswarm-playground-test-catalog"
           chart: "giantswarm-todo-app"
           executor: "app-build-suite"
-          # Trigger job on git tag
+          # Trigger job on git tag.
           filters:
             tags:
               only: /^v.*/
