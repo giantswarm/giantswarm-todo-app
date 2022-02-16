@@ -4,7 +4,8 @@ orbs:
 
 jobs:
   checkout_code:
-    machine: true
+    machine:
+      image: ubuntu-2004:202201-02
     working_directory: ~/giantswarm-todo
     steps:
       - checkout
@@ -16,7 +17,8 @@ jobs:
           paths:
             - ~/giantswarm-todo
   build_apiserver:
-    machine: true
+    machine:
+      image: ubuntu-2004:202201-02
     working_directory:
       ~/giantswarm-todo/api-server
     steps:
@@ -27,7 +29,8 @@ jobs:
       - run: echo -n "${QUAY_PASSWORD}" | docker login --username "${QUAY_USERNAME}" --password-stdin quay.io
       - run: IMG_VER=$(cat .version) make docker-push
   build_todomanager:
-    machine: true
+    machine:
+      image: ubuntu-2004:202201-02
     working_directory:
       ~/giantswarm-todo/todo-manager
     steps:
