@@ -15,6 +15,6 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 
 - Introduce artificial failure modes
 
-[Unreleased]: https://github.com/giantswarm/giantswarm-todo-app/compare/v0.5.2...HEAD
-[0.5.2]: https://github.com/giantswarm/giantswarm-todo-app/compare/v0.5.1...v0.5.2
-[0.5.1]: https://github.com/giantswarm/giantswarm-todo-app/compare/v0.0.1...v0.5.1
+[Unreleased]: https://github.com/giantswarm/giantswarm-todo-app-todo-app/compare/v0.5.2...HEAD
+[0.5.2]: https://github.com/giantswarm/giantswarm-todo-app-todo-app/compare/v0.5.1...v0.5.2
+[0.5.1]: https://github.com/giantswarm/giantswarm-todo-app-todo-app/compare/v0.0.1...v0.5.1
