@@ -7,6 +7,10 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 
 ## [Unreleased]
 
+## Changed
+
+- make PSP Rendering conditional for 1.25+ compatibility
+
 ## [0.5.2] - 2020-11-16
 
 - add: new option to enable/disable app tracing mechanism only, independently of NS tracing setting
