@@ -1,4 +1,5 @@
 {{- if .Values.linkerdEnabled }}
+{{- if .Capabilities.APIVersions.Has "policy/v1beta1/PodSecurityPolicy" }}
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
 metadata:
@@ -47,6 +48,7 @@ spec:
   - configMap
   - projected
   - downwardAPI
+{{- end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: Role
